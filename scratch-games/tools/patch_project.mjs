@@ -34,7 +34,7 @@ let counter = 0;
 const newId = () => `nq_${(counter += 1).toString(36).padStart(5, '0')}`;
 const BOOLEAN = new Set([
   'operator_lt', 'operator_gt', 'operator_equals', 'operator_and', 'operator_or', 'operator_not',
-  'sensing_touchingobject', 'sensing_keypressed', 'sensing_mousedown', 'data_listcontainsitem',
+  'sensing_touchingobject', 'sensing_keypressed', 'sensing_mousedown', 'data_listcontainsitem', 'sensing_touchingcolor',
 ]);
 
 const lookup = (table, name) => Object.entries(table).find(([, value]) => (Array.isArray(value) ? value[0] : value) === name)?.[0];
@@ -51,6 +51,7 @@ const gbroadcast = (name) => (stage.broadcasts[newId()] = name);
 function encode(target, value, parent) {
   if (typeof value === 'number') return [1, [4, String(value)]];
   if (typeof value === 'string') return [1, [10, value]];
+  if (value.raw) return value.raw;
   if (value.var) return [3, [12, ...ref(target, 'variables', value.var)], [10, '']];
   if (value.bc) return [1, [11, ...ref(target, 'broadcasts', value.bc)]];
   if (value.menu) return [1, make(target, { opcode: value.menu, fields: { [value.field]: value.value }, shadow: true }, parent)];
@@ -62,6 +63,7 @@ function make(target, node, parent) {
   const id = newId();
   const block = { opcode: node.opcode, next: null, parent, inputs: {}, fields: {}, shadow: Boolean(node.shadow), topLevel: false };
   target.blocks[id] = block;
+  if (node.mutation) block.mutation = node.mutation;
   for (const [key, value] of Object.entries(node.inputs ?? {})) block.inputs[key] = encode(target, value, id);
   for (const [key, value] of Object.entries(node.fields ?? {})) {
     if (key === 'VARIABLE') block.fields[key] = ref(target, 'variables', value);
@@ -159,6 +161,8 @@ const cfg = (list) => item(list, backdropNumber);
 const touching = (name) => N('sensing_touchingobject', { TOUCHINGOBJECTMENU: menu('sensing_touchingobjectmenu', 'TOUCHINGOBJECTMENU', name) });
 const keyDown = (key) => N('sensing_keypressed', { KEY_OPTION: menu('sensing_keyoptions', 'KEY_OPTION', key) });
 const propertyOf = (property, object) => N('sensing_of', { OBJECT: menu('sensing_of_object_menu', 'OBJECT', object) }, { PROPERTY: property });
+const touchingColor = (hex) => N('sensing_touchingcolor', { COLOR: { raw: [1, [9, hex]] } });
+const stopThisScript = { ...N('control_stop', {}, { STOP_OPTION: 'this script' }), mutation: { tagName: 'mutation', children: [], hasnext: 'false' } };
 const xPos = N('motion_xposition');
 const yPos = N('motion_yposition');
 
@@ -505,7 +509,19 @@ for (const target of project.targets) {
   }
 }
 // 怪物清光 → 出題（原本寫在水母怪身上）
-script(stage, hatReceive('WM'), [waitUntil(lt(V(ALIVE), 1)), set(FIGHTING, 0), wait(1), broadcast('怪物死亡'), set('控制叫怪', 0)]);
+// 原專案「怪物清光 → 切到答題畫面」的程式：主角剛好也倒下時不能再切背景，
+// 否則會和 Game Over 的切換打架（背景被加一變成別的畫面，整個卡住）
+for (const [, hat] of topLevel(stage)) {
+  const waitBlock = stage.blocks[hat.next];
+  if (hat.opcode !== 'event_whenbroadcastreceived' || hat.fields.BROADCAST_OPTION[0] !== 'WM') continue;
+  if (waitBlock?.opcode !== 'control_wait_until' || stage.blocks[waitBlock.inputs.CONDITION[1]]?.inputs.OPERAND1?.[1]?.[1] !== ALIVE) continue;
+  insertBefore(stage, waitBlock.next, [when(lt(V('HP'), 1), [stopThisScript])]);
+  count('victoryGuards');
+}
+script(stage, hatReceive('WM'), [
+  waitUntil(lt(V(ALIVE), 1)),
+  when(gt(V('HP'), 0), [set(FIGHTING, 0), wait(1), broadcast('怪物死亡'), set('控制叫怪', 0)]),
+]);
 script(stage, hatBackdrop('GAME OVER'), [set(FIGHTING, 0)]);
 
 for (const monster of Object.values(MONSTERS)) {
@@ -526,7 +542,7 @@ for (const monster of Object.values(MONSTERS)) {
     setEffect('PIXELATE', monster.pixelate),
     setEffect('COLOR', c('tint')),
     rotationStyle('left-right'),
-    goTo(rnd(-50, 140), rnd(-120, 110)),
+    goTo(rnd(-40, 100), rnd(-120, 85)),
     setEffect('GHOST', 100),
     show,
     effect(xPos, yPos, 'ring'),
@@ -540,7 +556,7 @@ for (const monster of Object.values(MONSTERS)) {
       ], [setEffect('BRIGHTNESS', 0)]),
     ]),
     setEffect('BRIGHTNESS', 0),
-    when(lt(V('我的HP'), 1), [
+    when(and(lt(V('我的HP'), 1), gt(V('HP'), 0)), [
       change(ALIVE, -1),
       repeat(5, effect(xPos, yPos, 'puff')),
       repeat(6, [changeSize(div(mul(monster.size, c('size')), 1200)), changeEffect('GHOST', 16)]),
@@ -629,6 +645,36 @@ for (const [name, speed] of Object.entries(PROJECTILES)) {
       ]),
     ]),
     setEffect('GHOST', 0),
+  ]);
+  // 移動。原專案碰到牆壁顏色時會把主角「朝水母怪的位置」拉過去，結果是被吸向場地中央（大廳的桌子），
+  // 而且牆壁顏色有缺口，可以直接走出地圖。這裡改成：這一步會撞牆或出界就退回去。
+  removeScripts(target, (block, id) => blocksOf(target, id).some(([, b]) => b.opcode.startsWith('procedures_')));
+  lvar(target, '卡住');
+  lvar(target, '出界');
+  const touchingWall = or(touchingColor('#3d8844'), touchingColor('#5b656c'), touchingColor('#51504e'));
+  // 關卡場地是十字形：中間的房間＋左右的走廊（座標取三張地圖都安全的範圍）；大廳不套用
+  const inRoom = and(and(gt(xPos, -106), lt(xPos, 109)), and(gt(yPos, -150), lt(yPos, 96)));
+  const inCorridor = and(and(gt(xPos, -226), lt(xPos, 226)), and(gt(yPos, -93), lt(yPos, 1)));
+  const outside = and(gt(backdropNumber, 4), not(or(inRoom, inCorridor)));
+  const step = (key, direction) =>
+    when(keyDown(key), [
+      pointAt(direction),
+      move(5),
+      // 原本就卡在牆裡／界外時不擋，讓玩家走得出來
+      when(or(and(eq(V('卡住'), 0), touchingWall), and(eq(V('出界'), 0), outside)), [move(-5)]),
+    ]);
+  script(target, hatBackdrop('LOBBY'), [
+    goTo(-206, -53),
+    pointAt(90),
+    rotationStyle('left-right'),
+    forever([
+      when(touchingWall, [set('卡住', 1)], [set('卡住', 0)]),
+      when(outside, [set('出界', 1)], [set('出界', 0)]),
+      step('w', 0),
+      step('a', -90),
+      step('s', 180),
+      step('d', 90),
+    ]),
   ]);
   // 跑動時的揚塵
   script(target, hatBackdrop('LOBBY'), [
@@ -720,7 +766,7 @@ for (const target of project.targets) {
     for (const other of refs) if (other && !target.blocks[other]) throw new Error(`${target.name} 的積木 ${id}（${block.opcode}）指向不存在的 ${other}`);
   }
 }
-const expected = { questions: 150, pickLoops: 19, pickResets: 2, cheats: 2, finalBossQuestions: 1, fightStarts: 16, allDeadChecks: 14, chapter3Scripts: 26 };
+const expected = { questions: 150, pickLoops: 19, pickResets: 2, cheats: 2, finalBossQuestions: 1, fightStarts: 16, allDeadChecks: 14, chapter3Scripts: 26, victoryGuards: 1 };
 for (const [key, value] of Object.entries(expected)) {
   if (report[key] !== value) throw new Error(`「${key}」修改了 ${report[key]} 處，預期 ${value} 處（專案版本不同？）：${JSON.stringify(report)}`);
 }
