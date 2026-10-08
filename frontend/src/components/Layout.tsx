@@ -2,12 +2,15 @@ import { NavLink, Outlet, useNavigate } from 'react-router-dom';
 
 import { useAuthActions, useMe } from '../features/auth/AuthContext';
 import { ExpBar, LevelBadge } from './ExpBar';
+import { Icon, type IconName } from './icons';
+import { ThemePicker } from './ThemePicker';
 
-const NAV = [
-  { to: '/', label: '冒險大廳', icon: '⛩' },
-  { to: '/dashboard', label: '修行紀錄', icon: '📜' },
-  { to: '/leaderboard', label: '英雄榜', icon: '🏆' },
-  { to: '/profile', label: '冒險者證', icon: '🪪' },
+const NAV: { to: string; label: string; icon: IconName }[] = [
+  { to: '/', label: '冒險大廳', icon: 'home' },
+  { to: '/review', label: '錯題複習', icon: 'book' },
+  { to: '/dashboard', label: '修行紀錄', icon: 'chart' },
+  { to: '/leaderboard', label: '英雄榜', icon: 'trophy' },
+  { to: '/classes', label: '班級', icon: 'users' },
 ];
 
 export function Torii({ className = '' }: { className?: string }) {
@@ -21,6 +24,14 @@ export function Torii({ className = '' }: { className?: string }) {
   );
 }
 
+export function Wordmark({ className = '' }: { className?: string }) {
+  return (
+    <span className={`font-serif font-bold tracking-wide text-washi ${className}`}>
+      Nihongo <span className="text-shu">Quest</span>
+    </span>
+  );
+}
+
 export function Layout() {
   const { data: me } = useMe();
   const { logout } = useAuthActions();
@@ -28,53 +39,69 @@ export function Layout() {
   if (!me) return null;
 
   const linkClass = ({ isActive }: { isActive: boolean }) =>
-    `flex items-center gap-2 rounded px-3 py-2 text-sm font-bold tracking-wider transition ${
-      isActive ? 'bg-shu text-white shadow-[0_3px_0_#7c2418]' : 'text-mist hover:bg-night-700 hover:text-washi'
+    `relative flex items-center gap-2 whitespace-nowrap rounded-lg px-3 py-2 text-sm transition ${
+      isActive ? 'bg-night-700 font-bold text-washi' : 'font-medium text-mist hover:bg-night-700/60 hover:text-washi'
     }`;
 
   return (
-    <div className="mx-auto flex min-h-dvh max-w-6xl flex-col px-4 pb-24 md:pb-10">
-      <header className="flex flex-wrap items-center gap-x-6 gap-y-3 py-4">
-        <NavLink to="/" className="flex items-center gap-2">
-          <Torii className="h-9 w-9 text-shu" />
-          <span className="font-pixel text-xl tracking-[0.2em] text-washi">
-            Nihongo<span className="text-gold">Quest</span>
-          </span>
-        </NavLink>
+    <div className="min-h-dvh pb-24 lg:pb-12">
+      <header className="sticky top-0 z-20 border-b border-night-600 bg-night-950/90 backdrop-blur">
+        <div className="mx-auto flex h-16 max-w-6xl items-center gap-x-4 px-4 xl:gap-x-6">
+          <NavLink to="/" className="flex shrink-0 items-center gap-2.5">
+            <Torii className="h-7 w-7 text-shu" />
+            <Wordmark className="text-lg" />
+          </NavLink>
 
-        <nav className="hidden gap-1 md:flex" aria-label="主選單">
-          {NAV.map((item) => (
-            <NavLink key={item.to} to={item.to} end={item.to === '/'} className={linkClass}>
-              <span aria-hidden="true">{item.icon}</span>
-              {item.label}
+          <nav className="hidden gap-1 lg:flex" aria-label="主選單">
+            {NAV.map((item) => (
+              <NavLink key={item.to} to={item.to} end={item.to === '/'} className={linkClass}>
+                <Icon name={item.icon} className="h-[18px] w-[18px]" />
+                {item.label}
+              </NavLink>
+            ))}
+          </nav>
+
+          <div className="ml-auto flex min-w-0 items-center gap-1.5">
+            {/* 等級與暱稱就是「冒險者證」的入口 */}
+            <NavLink
+              to="/profile"
+              title="冒險者證"
+              className={({ isActive }) =>
+                `flex min-w-0 items-center gap-3 rounded-lg px-2 py-1.5 transition hover:bg-night-700 ${
+                  isActive ? 'bg-night-700' : ''
+                }`
+              }
+            >
+              <LevelBadge level={me.progress.level} size="sm" />
+              <div className="hidden w-32 min-w-0 sm:block">
+                <div className="truncate text-sm font-bold leading-tight">{me.display_name}</div>
+                <div className="mt-1">
+                  <ExpBar progress={me.progress} compact />
+                </div>
+              </div>
             </NavLink>
-          ))}
-        </nav>
-
-        <div className="ml-auto flex items-center gap-3">
-          <LevelBadge level={me.progress.level} size="sm" />
-          <div className="w-28 sm:w-40">
-            <div className="truncate text-sm font-bold">{me.display_name}</div>
-            <ExpBar progress={me.progress} compact />
+            <ThemePicker />
+            <button
+              type="button"
+              className="grid h-9 w-9 shrink-0 place-items-center rounded-lg text-mist transition hover:bg-night-700 hover:text-washi"
+              aria-label="登出"
+              title="登出"
+              disabled={logout.isPending}
+              onClick={() => logout.mutate(undefined, { onSuccess: () => navigate('/login') })}
+            >
+              <Icon name="logout" />
+            </button>
           </div>
-          <button
-            type="button"
-            className="btn-ghost px-3 py-1.5 text-xs"
-            disabled={logout.isPending}
-            onClick={() => logout.mutate(undefined, { onSuccess: () => navigate('/login') })}
-          >
-            登出
-          </button>
         </div>
       </header>
 
-      <main className="flex-1">
+      <main className="mx-auto max-w-6xl px-4 pt-8">
         <Outlet />
       </main>
 
       {/* 手機：底部分頁列 */}
       <nav
-        className="fixed inset-x-0 bottom-0 z-20 grid grid-cols-4 border-t-2 border-gold/25 bg-night-900/95 backdrop-blur md:hidden"
+        className="fixed inset-x-0 bottom-0 z-20 grid grid-cols-5 border-t border-night-600 bg-night-800/95 backdrop-blur lg:hidden"
         aria-label="主選單"
       >
         {NAV.map((item) => (
@@ -83,12 +110,10 @@ export function Layout() {
             to={item.to}
             end={item.to === '/'}
             className={({ isActive }) =>
-              `flex flex-col items-center gap-0.5 py-2 text-xs font-bold ${isActive ? 'text-gold' : 'text-mist'}`
+              `flex flex-col items-center gap-1 py-2.5 text-[11px] ${isActive ? 'font-bold text-shu' : 'text-mist'}`
             }
           >
-            <span className="text-lg" aria-hidden="true">
-              {item.icon}
-            </span>
+            <Icon name={item.icon} />
             {item.label}
           </NavLink>
         ))}

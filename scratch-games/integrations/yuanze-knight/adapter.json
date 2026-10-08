@@ -1,9 +1,10 @@
 {
   "game": "yuanze-knight",
-  "bundle": "yuanze-knight-v1.2.sb3",
+  "bundle": "yuanze-knight-v1.4.sb3",
+  "bundleDir": "patched",
   "stage": { "width": 480, "height": 360 },
   "lobbyBackdrops": ["LOAD", "INS", "MAIN", "LOBBY"],
-  "levelBackdrops": ["1-1", "1-2", "1-3", "1-4", "1-5", "1-X", "2-1", "2-2", "2-3", "2-4", "2-5", "2-X"],
+  "levelBackdrops": ["1-1", "1-2", "1-3", "1-4", "1-5", "1-X", "2-1", "2-2", "2-3", "2-4", "2-5", "2-X", "3-1", "3-2", "3-3", "3-4", "3-5", "3-X"],
   "runStartBackdrop": "1-1",
   "clearedBackdrop": "THE END",
   "failedBackdrop": "GAME OVER",

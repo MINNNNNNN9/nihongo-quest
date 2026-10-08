@@ -64,7 +64,31 @@ docker compose -f docker-compose.prod.yml up -d --build
 docker compose -f docker-compose.prod.yml exec db pg_dump -U "$POSTGRES_USER" "$POSTGRES_DB" | gzip > backup-$(date +%F).sql.gz
 ```
 
-## 部署到雲端平台
+## 部署到 Render（免費方案）
+
+不需要自己的主機，電腦關機也能用。整個網站跑在一個容器裡（`deploy/render/Dockerfile`：nginx＋gunicorn），
+資料庫放在外部的託管 PostgreSQL。
+
+> Render 自己的免費 PostgreSQL 建立 30 天後會到期並刪除資料，所以這裡改用 [Neon](https://neon.com) 的免費方案。
+
+1. **建立資料庫**：在 Neon 註冊 → 建立 Project（Region 選 Singapore）→ 複製 **Connection string**
+   （`postgresql://…?sslmode=require` 開頭的那一串，含密碼）。
+2. **建立服務**：在 [Render](https://render.com) 註冊並連結 GitHub → **New → Blueprint** → 選這個 repo 與要部署的分支。
+   Render 會讀取根目錄的 `render.yaml`，並要求輸入 `DATABASE_URL`，貼上第 1 步的連線網址。
+3. 等第一次建置完成（約 5～10 分鐘），網址是 `https://<服務名稱>.onrender.com`。
+4. （選用）建立後台管理員：免費方案沒有 Shell，可在本機用同一個 `DATABASE_URL` 執行
+   `docker run --rm -it -e DJANGO_SECRET_KEY=x -e DATABASE_URL="<連線網址>" <映像> python manage.py createsuperuser`。
+
+設定都在 `render.yaml`：`DJANGO_SECRET_KEY` 由 Render 自動產生；對外網域由 Render 提供的
+`RENDER_EXTERNAL_HOSTNAME` 自動加入 `ALLOWED_HOSTS` 與 `CSRF_TRUSTED_ORIGINS`；健康檢查走 nginx 的 `/healthz`。
+
+免費方案的限制：
+
+- 15 分鐘沒有人使用就會休眠，下一位使用者要等約 1 分鐘喚醒（期間瀏覽器會一直轉圈）。
+- 記憶體 512 MB、每月 750 小時；Neon 免費方案約 1 GB 儲存空間，閒置 5 分鐘後暫停、連線時自動喚醒。
+- 之後每次 push 到部署的分支，Render 會自動重新建置並上線。
+
+## 部署到其他雲端平台
 
 映像是標準 Docker，以下平台都能用；共同重點是「前端與 API 要在同一個網域下」（驗證採同源 Cookie）。
 

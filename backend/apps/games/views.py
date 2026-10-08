@@ -27,7 +27,9 @@ class GameDetailView(generics.RetrieveAPIView):
     lookup_field = "slug"
 
     def get_queryset(self):
-        return games_for(self.request.user).annotate(question_count=Count("questions", distinct=True))
+        return games_for(self.request.user).annotate(
+            question_count=Count("questions", filter=Q(questions__in_game=True), distinct=True)
+        )
 
 
 class GameLevelListView(generics.ListAPIView):

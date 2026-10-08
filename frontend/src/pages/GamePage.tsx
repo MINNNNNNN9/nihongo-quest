@@ -1,7 +1,10 @@
 import { useQuery } from '@tanstack/react-query';
-import { useRef } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { useEffect, useRef, useState } from 'react';
+import { Link, useBlocker, useParams } from 'react-router-dom';
 
+import { FeedbackCard } from '../components/FeedbackCard';
+import { FuriganaToggle } from '../components/Ruby';
+import { hasSeenTutorial, Tutorial } from '../components/Tutorial';
 import { LevelMap } from '../components/LevelMap';
 import { LevelUpOverlay } from '../components/LevelUpOverlay';
 import { ErrorPanel, LoadingPanel } from '../components/ui';
@@ -28,25 +31,25 @@ function RunHud({ run, status, levels }: { run: RunState; status: PlayerStatus; 
   return (
     <section className="panel space-y-4" aria-live="polite">
       <div>
-        <div className="font-pixel text-xs tracking-[0.4em] text-shu">ステータス</div>
+        <div className="eyebrow">ステータス</div>
         <div className="font-bold">
           {run.outcome === 'cleared' ? '🎉 全破！' : run.outcome === 'failed' ? '💀 Game Over' : STATUS_LABEL[status]}
         </div>
       </div>
       <dl className="grid grid-cols-2 gap-3 text-center">
-        <div className="rounded bg-night-900 p-2">
+        <div className="rounded-lg bg-night-900 p-2">
           <dt className="text-xs text-mist">目前關卡</dt>
           <dd className="font-pixel text-lg text-washi">{level ? level.key : '—'}</dd>
         </div>
-        <div className="rounded bg-night-900 p-2">
+        <div className="rounded-lg bg-night-900 p-2">
           <dt className="text-xs text-mist">本局 EXP</dt>
           <dd className="font-pixel text-lg text-gold">+{run.expEarned}</dd>
         </div>
-        <div className="rounded bg-night-900 p-2">
+        <div className="rounded-lg bg-night-900 p-2">
           <dt className="text-xs text-mist">答對</dt>
           <dd className="font-pixel text-lg text-matcha">{run.correct}</dd>
         </div>
-        <div className="rounded bg-night-900 p-2">
+        <div className="rounded-lg bg-night-900 p-2">
           <dt className="text-xs text-mist">答錯</dt>
           <dd className="font-pixel text-lg text-shu">{run.wrong}</dd>
         </div>
@@ -57,7 +60,7 @@ function RunHud({ run, status, levels }: { run: RunState; status: PlayerStatus; 
         </div>
       )}
       {run.result && (
-        <div className="rounded border border-gold/40 bg-night-900 p-3 text-sm">
+        <div className="rounded-lg border border-gold/40 bg-night-900 p-3 text-sm">
           <div className="heading mb-1 text-sm">本局結算</div>
           <div className="flex justify-between">
             <span className="text-mist">答題評價</span>
@@ -90,6 +93,19 @@ export function GamePage() {
     queryFn: () => api.get<GameLevel[]>(`/games/${slug}/levels/`),
   });
   const bridge = useGameBridge(slug, iframeRef);
+  const [showTutorial, setShowTutorial] = useState(() => !hasSeenTutorial());
+
+  // Scratch 遊戲沒辦法存檔：冒險途中離開，這一局就作廢，所以離開前先提醒
+  const inProgress = bridge.status === 'playing' && bridge.run.outcome === null;
+  const blocker = useBlocker(
+    ({ currentLocation, nextLocation }) => inProgress && currentLocation.pathname !== nextLocation.pathname,
+  );
+  useEffect(() => {
+    if (!inProgress) return;
+    const warn = (event: BeforeUnloadEvent) => event.preventDefault();
+    window.addEventListener('beforeunload', warn);
+    return () => window.removeEventListener('beforeunload', warn);
+  }, [inProgress]);
 
   if (game.isPending) return <LoadingPanel />;
   if (game.isError) return <ErrorPanel error={game.error} />;
@@ -104,16 +120,21 @@ export function GamePage() {
           <h1 className="heading text-2xl sm:text-3xl">{game.data.title}</h1>
           <div className="text-sm text-mist">{game.data.subtitle}</div>
         </div>
-        <button type="button" className="btn-ghost text-sm" onClick={() => frameRef.current?.requestFullscreen?.()}>
-          ⛶ 全螢幕
-        </button>
+        <div className="flex gap-2">
+          <button type="button" className="btn-ghost text-sm" onClick={() => setShowTutorial(true)}>
+            ？ 玩法說明
+          </button>
+          <button type="button" className="btn-ghost text-sm" onClick={() => frameRef.current?.requestFullscreen?.()}>
+            ⛶ 全螢幕
+          </button>
+        </div>
       </div>
 
       <div className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_18rem]">
         <div>
           <div
             ref={frameRef}
-            className="relative aspect-[4/3] w-full overflow-hidden rounded-lg border-4 border-night-600 bg-night-950 shadow-[0_8px_0_#00000066,0_0_40px_#6fb7e622]"
+            className="relative aspect-[4/3] w-full overflow-hidden rounded-xl border border-night-600 bg-black shadow-[0_18px_40px_-20px_var(--color-shadow)]"
           >
             <iframe
               ref={iframeRef}
@@ -123,14 +144,35 @@ export function GamePage() {
               allow="autoplay; fullscreen"
             />
           </div>
-          <p className="mt-3 rounded bg-night-900/70 px-3 py-2 text-sm text-mist">
+          <p className="mt-3 rounded-lg bg-night-900/70 px-3 py-2 text-sm text-mist">
             <span className="font-bold text-washi">操作：</span>
             {game.data.controls}
+            <span className="mt-1 block text-xs">手機／平板：左下搖桿移動、點畫面瞄準射擊、右下「互動」鈕＝空白鍵。</span>
           </p>
         </div>
 
         <aside className="space-y-5">
           <RunHud run={bridge.run} status={bridge.status} levels={levels.data ?? []} />
+          <section className="panel space-y-3" aria-live="polite">
+            <div className="flex items-center justify-between">
+              <h2 className="heading text-sm">作答解說</h2>
+              <FuriganaToggle />
+            </div>
+            {bridge.run.lastAnswer ? (
+              <FeedbackCard
+                feedback={bridge.run.lastAnswer.feedback}
+                isCorrect={bridge.run.lastAnswer.isCorrect}
+                hideAnswer
+              />
+            ) : (
+              <p className="text-sm text-mist">在遊戲裡回答助詞題之後，這裡會顯示句子的中文意思與文法重點。</p>
+            )}
+            {bridge.run.wrong > 0 && (
+              <Link to="/review" className="block text-center text-xs text-mist hover:text-gold">
+                答錯的題目已收進「錯題複習」
+              </Link>
+            )}
+          </section>
           {bridge.status === 'error' && (
             <div className="panel border-shu/60 text-sm" role="alert">
               遊戲無法載入：{bridge.errorMessage}
@@ -166,13 +208,37 @@ export function GamePage() {
 
       <div className="pointer-events-none fixed bottom-20 right-4 z-40 flex w-72 flex-col gap-2 md:bottom-6" aria-live="polite">
         {bridge.notices.map((notice) => (
-          <div key={notice.id} className={`animate-rise rounded border-2 px-3 py-2 text-sm font-bold ${NOTICE_TONE[notice.tone]}`}>
+          <div key={notice.id} className={`animate-rise rounded-lg border px-3 py-2 text-sm font-bold ${NOTICE_TONE[notice.tone]}`}>
             {notice.text}
           </div>
         ))}
       </div>
 
       {bridge.levelUp && <LevelUpOverlay reward={bridge.levelUp} onClose={bridge.dismissLevelUp} />}
+      {showTutorial && <Tutorial onClose={() => setShowTutorial(false)} />}
+
+      {blocker.state === 'blocked' && (
+        <div role="alertdialog" aria-modal="true" aria-labelledby="leave-title" className="fixed inset-0 z-50 grid place-items-center bg-black/55 p-4">
+          <div className="panel w-full max-w-sm space-y-4 text-center">
+            <h2 id="leave-title" className="heading text-xl">
+              要離開冒險嗎？
+            </h2>
+            <p className="text-sm leading-relaxed text-washi/90">
+              遊戲沒有辦法存檔，現在離開的話<b>這一局會作廢</b>，下次要從 1-1 重新開始。
+              <br />
+              已經過關拿到的 EXP 和作答紀錄都會保留。
+            </p>
+            <div className="flex justify-center gap-3">
+              <button type="button" className="btn-primary" autoFocus onClick={() => blocker.reset()}>
+                繼續冒險
+              </button>
+              <button type="button" className="btn-ghost" onClick={() => blocker.proceed()}>
+                離開
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

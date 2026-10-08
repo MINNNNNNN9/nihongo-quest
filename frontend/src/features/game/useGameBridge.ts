@@ -2,7 +2,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import { useCallback, useEffect, useRef, useState, type RefObject } from 'react';
 
 import { api, ApiError } from '../../lib/api';
-import type { EventResult, GameSession, Reward } from '../../lib/types';
+import type { EventResult, Feedback, GameSession, Reward } from '../../lib/types';
 import { ME_KEY } from '../auth/AuthContext';
 import { parseGameMessage, type GameMessage } from './protocol';
 
@@ -17,6 +17,8 @@ export interface RunState {
   clearedLevels: string[];
   outcome: 'cleared' | 'failed' | null;
   result: GameSession | null;
+  /** 最近一次作答的解說 */
+  lastAnswer: { feedback: Feedback; isCorrect: boolean } | null;
 }
 
 export interface Notice {
@@ -34,6 +36,7 @@ const EMPTY_RUN: RunState = {
   clearedLevels: [],
   outcome: null,
   result: null,
+  lastAnswer: null,
 };
 
 const GAME_ORIGIN = import.meta.env.VITE_GAME_ORIGIN ?? window.location.origin;
@@ -76,7 +79,7 @@ export function useGameBridge(game: string, iframeRef: RefObject<HTMLIFrameEleme
   }, []);
 
   const refreshPlayerData = useCallback(() => {
-    for (const key of ['games', 'levels', 'dashboard', 'leaderboard', 'records']) {
+    for (const key of ['games', 'levels', 'dashboard', 'leaderboard', 'records', 'quests', 'review']) {
       queryClient.invalidateQueries({ queryKey: [key] });
     }
   }, [queryClient]);
@@ -127,7 +130,12 @@ export function useGameBridge(game: string, iframeRef: RefObject<HTMLIFrameEleme
             setRun((r) => ({ ...r, levelKey: message.payload.level_key }));
           } else if (message.type === 'QUESTION_ANSWERED') {
             const correct = result.is_correct ?? message.payload.is_correct;
-            setRun((r) => ({ ...r, correct: r.correct + (correct ? 1 : 0), wrong: r.wrong + (correct ? 0 : 1) }));
+            setRun((r) => ({
+              ...r,
+              correct: r.correct + (correct ? 1 : 0),
+              wrong: r.wrong + (correct ? 0 : 1),
+              lastAnswer: result.feedback ? { feedback: result.feedback, isCorrect: correct } : r.lastAnswer,
+            }));
           } else if (result.reward) {
             const reward = result.reward;
             setRun((r) => ({

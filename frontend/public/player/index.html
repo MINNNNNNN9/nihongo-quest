@@ -5,27 +5,42 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Nihongo Quest Player</title>
     <style>
-      html, body { margin: 0; height: 100%; background: #0d1020; overflow: hidden; }
-      body { font-family: "Zen Maru Gothic", "Noto Sans TC", system-ui, sans-serif; color: #f6efdd; }
+      html, body { margin: 0; height: 100%; background: #131211; overflow: hidden; }
+      body { font-family: "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", system-ui, sans-serif; color: #ece8e0; }
       #project { position: absolute; inset: 0; }
       #overlay {
         position: absolute; inset: 0; display: grid; place-content: center; justify-items: center; gap: 16px;
-        background: radial-gradient(circle at 50% 35%, #2a2f5c 0%, #0d1020 70%);
+        background: #1b1a18;
       }
       #overlay[hidden] { display: none; }
       #status { font-size: 15px; letter-spacing: 0.08em; min-height: 1.4em; }
       #start {
-        font: inherit; font-size: 20px; font-weight: 700; letter-spacing: 0.2em; color: #1a1330;
-        padding: 14px 36px; border: 0; border-radius: 4px; cursor: pointer;
-        background: linear-gradient(#ffd97a, #e8a93a); box-shadow: 0 4px 0 #8a5a12, 0 0 28px #e8a93a66;
+        font: inherit; font-size: 18px; font-weight: 700; letter-spacing: 0.15em; color: #fff;
+        padding: 14px 36px; border: 0; border-radius: 10px; cursor: pointer; background: #c2412d;
       }
       #start:hover { filter: brightness(1.08); }
-      #start:active { transform: translateY(3px); box-shadow: 0 1px 0 #8a5a12; }
+      #start:active { filter: brightness(0.95); }
       #start[hidden] { display: none; }
+
+      /* 觸控裝置的虛擬按鍵（touch.js） */
+      #touch { position: absolute; inset: 0; pointer-events: none; user-select: none; -webkit-user-select: none; }
+      #touch[hidden] { display: none; }
+      #touch [data-pad] { position: absolute; bottom: 5%; pointer-events: auto; touch-action: none; }
+      #touch .stick {
+        left: 3%; width: 30%; max-width: 130px; aspect-ratio: 1; border-radius: 50%;
+        background: #ffffff1f; border: 2px solid #ffffff55; display: grid; place-items: center;
+      }
+      #touch .knob { width: 40%; aspect-ratio: 1; border-radius: 50%; background: #ffffffcc; pointer-events: none; }
+      #touch .action {
+        right: 4%; width: 22%; max-width: 92px; aspect-ratio: 1; border-radius: 50%; font: inherit; font-weight: 700;
+        color: #fff; background: #c2412dbb; border: 2px solid #ffffff66;
+      }
+      #touch .action.down { background: #c2412d; transform: scale(0.94); }
     </style>
   </head>
   <body>
     <div id="project"></div>
+    <div id="touch" hidden></div>
     <div id="overlay">
       <div id="status">準備中…</div>
       <button id="start" type="button" hidden>▶ 冒険を始める</button>

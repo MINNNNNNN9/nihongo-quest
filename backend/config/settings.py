@@ -1,6 +1,7 @@
 """Nihongo Quest 後端設定。所有敏感值與環境差異都由環境變數提供。"""
 import os
 from pathlib import Path
+from urllib.parse import parse_qsl, unquote, urlsplit
 
 from django.core.exceptions import ImproperlyConfigured
 
@@ -27,6 +28,12 @@ SECRET_KEY = env("DJANGO_SECRET_KEY")  # 沒有預設值：不允許用寫死的
 ALLOWED_HOSTS = env_list("DJANGO_ALLOWED_HOSTS", "localhost,127.0.0.1")
 CSRF_TRUSTED_ORIGINS = env_list("DJANGO_CSRF_TRUSTED_ORIGINS", "http://localhost:5173")
 
+# Render 會自動提供服務的對外網域（xxx.onrender.com），不必手動設定
+RENDER_HOSTNAME = os.environ.get("RENDER_EXTERNAL_HOSTNAME")
+if RENDER_HOSTNAME:
+    ALLOWED_HOSTS.append(RENDER_HOSTNAME)
+    CSRF_TRUSTED_ORIGINS.append(f"https://{RENDER_HOSTNAME}")
+
 INSTALLED_APPS = [
     "django.contrib.admin",
     "django.contrib.auth",
@@ -40,6 +47,7 @@ INSTALLED_APPS = [
     "apps.games",
     "apps.learning",
     "apps.gamification",
+    "apps.classrooms",
 ]
 
 MIDDLEWARE = [
@@ -74,16 +82,36 @@ TEMPLATES = [
     }
 ]
 
-DATABASES = {
-    "default": {
+def database_from_url(url: str) -> dict:
+    """把託管資料庫給的連線網址（postgresql://帳號:密碼@主機/資料庫?sslmode=require）轉成 Django 設定。"""
+    parts = urlsplit(url)
+    return {
         "ENGINE": "django.db.backends.postgresql",
-        "NAME": env("POSTGRES_DB", "nihongo_quest"),
-        "USER": env("POSTGRES_USER", "nihongo"),
-        "PASSWORD": env("POSTGRES_PASSWORD"),
-        "HOST": env("POSTGRES_HOST", "db"),
-        "PORT": env("POSTGRES_PORT", "5432"),
+        "NAME": unquote(parts.path.lstrip("/")),
+        "USER": unquote(parts.username or ""),
+        "PASSWORD": unquote(parts.password or ""),
+        "HOST": parts.hostname or "",
+        "PORT": str(parts.port or 5432),
+        # 網址上的參數（sslmode、channel_binding…）原樣交給資料庫驅動程式
+        "OPTIONS": dict(parse_qsl(parts.query)),
+        # 託管資料庫常經過連線池（PgBouncer），不能使用伺服器端游標
+        "DISABLE_SERVER_SIDE_CURSORS": True,
     }
-}
+
+
+if os.environ.get("DATABASE_URL"):
+    DATABASES = {"default": database_from_url(os.environ["DATABASE_URL"])}
+else:
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.postgresql",
+            "NAME": env("POSTGRES_DB", "nihongo_quest"),
+            "USER": env("POSTGRES_USER", "nihongo"),
+            "PASSWORD": env("POSTGRES_PASSWORD"),
+            "HOST": env("POSTGRES_HOST", "db"),
+            "PORT": env("POSTGRES_PORT", "5432"),
+        }
+    }
 
 AUTH_USER_MODEL = "accounts.User"
 AUTH_PASSWORD_VALIDATORS = [

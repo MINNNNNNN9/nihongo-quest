@@ -113,3 +113,12 @@ def test_login_is_rate_limited(user):
         for _ in range(12)
     ]
     assert codes[0] == 400 and codes[-1] == 429
+
+
+def test_database_url_is_parsed():
+    from config.settings import database_from_url
+
+    db = database_from_url("postgresql://neon_user:p%40ss@ep-x-pooler.aws.neon.tech/neondb?sslmode=require&channel_binding=require")
+    assert (db["NAME"], db["USER"], db["PASSWORD"], db["PORT"]) == ("neondb", "neon_user", "p@ss", "5432")
+    assert db["HOST"] == "ep-x-pooler.aws.neon.tech"
+    assert db["OPTIONS"] == {"sslmode": "require", "channel_binding": "require"}

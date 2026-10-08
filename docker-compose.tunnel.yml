@@ -1,0 +1,11 @@
+# 對外網：docker compose -f docker-compose.prod.yml -f docker-compose.tunnel.yml up -d
+# cloudflared 開一條 Cloudflare 臨時通道接到 web（nginx），HTTPS 由 Cloudflare 終止。
+# 網址（https://xxx.trycloudflare.com）每次重啟都會換，用下面指令查：
+#   docker compose -f docker-compose.prod.yml -f docker-compose.tunnel.yml logs tunnel
+services:
+  tunnel:
+    image: cloudflare/cloudflared:latest
+    restart: unless-stopped
+    command: tunnel --no-autoupdate --url http://web:80
+    depends_on:
+      - web

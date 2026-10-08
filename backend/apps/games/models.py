@@ -57,6 +57,8 @@ class Question(models.Model):
     correct_answer = models.CharField(max_length=40)
     # [{"sprite": 遊戲內選項角色名, "label": 顯示文字}]，伺服器用它由「玩家點的選項」判定對錯
     choices = models.JSONField(default=list)
+    # False：只出現在網頁的複習模式，原本的 Scratch 遊戲裡沒有這一題
+    in_game = models.BooleanField("遊戲內題目", default=True)
 
     class Meta:
         ordering = ["game", "number"]

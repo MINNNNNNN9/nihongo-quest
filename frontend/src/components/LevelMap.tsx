@@ -15,7 +15,7 @@ export function LevelMap({ levels, currentKey = null, runCleared = [] }: Props) 
     <div className="space-y-5">
       {chapters.map((chapter) => (
         <div key={chapter}>
-          <div className="mb-3 font-pixel text-sm tracking-widest text-mist">第 {chapter} 章</div>
+          <div className="mb-3 font-pixel text-sm tracking-wide text-mist">第 {chapter} 章</div>
           <ol className="flex flex-wrap items-center gap-y-4">
             {levels
               .filter((l) => l.chapter === chapter)
@@ -30,15 +30,15 @@ export function LevelMap({ levels, currentKey = null, runCleared = [] }: Props) 
                     )}
                     <div
                       title={`${level.title}｜首次通關 +${level.exp_reward} EXP｜已通關 ${level.clear_count} 次`}
-                      className={`relative grid place-items-center border-2 font-pixel transition ${
+                      className={`relative grid place-items-center border font-pixel transition ${
                         boss ? 'h-14 w-14 rotate-45 rounded-md' : 'h-11 w-11 rounded-full'
                       } ${
                         done
                           ? 'border-gold bg-gold/20 text-gold'
                           : 'border-night-600 bg-night-900 text-mist'
-                      } ${isCurrent ? 'animate-float border-shu shadow-[0_0_16px_#e2503c]' : ''}`}
+                      } ${isCurrent ? 'animate-float border-shu' : ''}`}
                     >
-                      <span className={boss ? '-rotate-45 text-lg' : 'text-xs'}>{boss ? '👹' : level.key}</span>
+                      <span className={boss ? '-rotate-45 font-serif text-lg font-bold' : 'font-serif text-xs'}>{boss ? '魔' : level.key}</span>
                       {done && (
                         <span
                           className={`absolute -right-1.5 -top-1.5 grid h-4 w-4 place-items-center rounded-full bg-matcha text-[10px] text-night-950 ${

@@ -17,6 +17,7 @@ from apps.games.models import Game, GameLevel, Question
 from apps.gamification import services as gamification
 
 from .models import GameSession, LearningRecord, QuestionAttempt
+from .review import feedback
 
 ANSWER_SCORE_BASE = 500  # 與原遊戲的「答題評價」相同：500 起算、每答錯一次 -10
 ANSWER_SCORE_PENALTY = 10
@@ -29,6 +30,7 @@ class EventResult:
     duplicate: bool = False
     is_correct: bool | None = None
     reward: gamification.Reward | None = None
+    feedback: dict | None = None  # 作答後的解說（題目、正解、提示）
 
 
 def start_session(user, game: Game) -> GameSession:
@@ -113,7 +115,7 @@ def _question_answered(session, level, data) -> EventResult:
     else:
         record.wrong_count += 1
     record.save(update_fields=["correct_count", "wrong_count"])
-    return EventResult(is_correct=is_correct)
+    return EventResult(is_correct=is_correct, feedback=feedback(question, label or ""))
 
 
 def _level_completed(session, level, data) -> EventResult:

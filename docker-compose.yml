@@ -45,6 +45,7 @@ services:
       - ./frontend/index.html:/app/frontend/index.html
       - ./frontend/public/player/bridge.js:/app/frontend/public/player/bridge.js
       - ./frontend/public/player/tracker.js:/app/frontend/public/player/tracker.js
+      - ./frontend/public/player/touch.js:/app/frontend/public/player/touch.js
     ports:
       - "${FRONTEND_PORT:-5173}:5173"
     depends_on:

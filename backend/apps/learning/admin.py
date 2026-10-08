@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import GameSession, LearningRecord, QuestionAttempt
+from .models import GameSession, LearningRecord, QuestionAttempt, ReviewAttempt
 
 
 @admin.register(GameSession)
@@ -15,3 +15,4 @@ class LearningRecordAdmin(admin.ModelAdmin):
 
 
 admin.site.register(QuestionAttempt)
+admin.site.register(ReviewAttempt)

@@ -1,4 +1,5 @@
 """學習儀表板與排行榜的統計查詢。所有查詢都以傳入的 user 為範圍。"""
+from collections import defaultdict
 from datetime import timedelta
 
 from django.db.models import Count, DurationField, ExpressionWrapper, F, Max, Q, Sum
@@ -6,9 +7,10 @@ from django.db.models.functions import Coalesce, TruncDate
 from django.utils import timezone
 
 from apps.accounts.models import PlayerProfile
-from apps.games.models import GameLevel
+from apps.games.furigana import annotate
+from apps.games.models import GameLevel, Question
 from apps.games.topics import TOPIC_LABELS
-from apps.learning.models import GameSession, LearningRecord, QuestionAttempt
+from apps.learning.models import GameSession, QuestionAttempt, ReviewAttempt
 
 from .leveling import level_for, level_progress
 from .models import ExperienceTransaction
@@ -26,27 +28,73 @@ def _profile(user) -> PlayerProfile:
     return PlayerProfile.objects.get(user=user)
 
 
+def question_counts(users) -> dict[int, list[int]]:
+    """各題的 [作答次數, 答對次數]，遊戲內作答與網頁複習合併計算。users 可以是單一使用者的 list 或 queryset。"""
+    counts: dict[int, list[int]] = defaultdict(lambda: [0, 0])
+    for model, lookup in ((QuestionAttempt, "record__session__user__in"), (ReviewAttempt, "user__in")):
+        rows = (
+            model.objects.filter(**{lookup: users})
+            .values("question_id")
+            .annotate(total=Count("id"), correct=Count("id", filter=Q(is_correct=True)))
+        )
+        for row in rows:
+            counts[row["question_id"]][0] += row["total"]
+            counts[row["question_id"]][1] += row["correct"]
+    return counts
+
+
+def answer_report(users, missed_limit: int = 5) -> dict:
+    """作答總數、各助詞正確率與最常答錯的題目。"""
+    counts = question_counts(users)
+    questions = Question.objects.in_bulk(counts)
+    by_topic: dict[str, list[int]] = defaultdict(lambda: [0, 0])
+    for question_id, (total, correct) in counts.items():
+        by_topic[questions[question_id].topic][0] += total
+        by_topic[questions[question_id].topic][1] += correct
+    missed = sorted(
+        ((total - correct, questions[qid], total) for qid, (total, correct) in counts.items() if total > correct),
+        key=lambda row: (-row[0], row[1].key),
+    )[:missed_limit]
+    answered = sum(total for total, _ in counts.values())
+    correct = sum(correct for _, correct in counts.values())
+    return {
+        "questions_answered": answered,
+        "accuracy": _rate(correct, answered),
+        "topics": [
+            {
+                "topic": topic,
+                "label": TOPIC_LABELS.get(topic, topic),
+                "attempts": total,
+                "correct": right,
+                "accuracy": _rate(right, total),
+            }
+            for topic, (total, right) in sorted(by_topic.items())
+        ],
+        "most_missed": [
+            {
+                "key": q.key,
+                "prompt": q.prompt,
+                "context": q.context,
+                "prompt_ruby": annotate(q.prompt),
+                "context_ruby": annotate(q.context),
+                "hint_zh": q.hint_zh.strip(),
+                "correct_answer": q.correct_answer,
+                "topic": q.topic,
+                "topic_label": TOPIC_LABELS.get(q.topic, q.topic),
+                "wrong": wrong,
+                "attempts": total,
+            }
+            for wrong, q, total in missed
+        ],
+    }
+
+
 def dashboard(user) -> dict:
     sessions = GameSession.objects.filter(user=user)
-    attempts = QuestionAttempt.objects.filter(record__session__user=user)
 
     duration = sessions.filter(ended_at__isnull=False).aggregate(
         total=Sum(ExpressionWrapper(F("ended_at") - F("started_at"), output_field=DurationField()))
     )["total"]
-    answered = attempts.aggregate(total=Count("id"), correct=Count("id", filter=Q(is_correct=True)))
-
-    topics = [
-        {
-            "topic": row["question__topic"],
-            "label": TOPIC_LABELS.get(row["question__topic"], row["question__topic"]),
-            "attempts": row["total"],
-            "correct": row["correct"],
-            "accuracy": _rate(row["correct"], row["total"]),
-        }
-        for row in attempts.values("question__topic")
-        .annotate(total=Count("id"), correct=Count("id", filter=Q(is_correct=True)))
-        .order_by("question__topic")
-    ]
 
     mine = Q(records__session__user=user)
     levels = [
@@ -66,36 +114,13 @@ def dashboard(user) -> dict:
         .order_by("game_id", "order")
     ]
 
-    missed = [
-        {
-            "key": row["question__key"],
-            "prompt": row["question__prompt"],
-            "context": row["question__context"],
-            "hint_zh": row["question__hint_zh"],
-            "correct_answer": row["question__correct_answer"],
-            "topic_label": TOPIC_LABELS.get(row["question__topic"], row["question__topic"]),
-            "wrong": row["wrong"],
-            "attempts": row["total"],
-        }
-        for row in attempts.values(
-            "question__key", "question__prompt", "question__context", "question__hint_zh",
-            "question__correct_answer", "question__topic",
-        )
-        .annotate(total=Count("id"), wrong=Count("id", filter=Q(is_correct=False)))
-        .filter(wrong__gt=0)
-        .order_by("-wrong", "question__key")[:5]
-    ]
-
     return {
         "progress": level_progress(_profile(user).total_exp),
         "total_sessions": sessions.count(),
         "cleared_sessions": sessions.filter(status=GameSession.Status.CLEARED).count(),
         "total_seconds": int(duration.total_seconds()) if duration else 0,
-        "questions_answered": answered["total"],
-        "accuracy": _rate(answered["correct"], answered["total"]),
-        "topics": topics,
+        **answer_report([user]),
         "levels": levels,
-        "most_missed": missed,
         "exp_history": exp_history(user),
         "recent_sessions": [
             {

@@ -2,7 +2,7 @@
   "slug": "yuanze-knight",
   "title": "元智騎士",
   "subtitle": "元智ナイト — 助詞ローグライク",
-  "description": "化身元智騎士闖入地下城：先擊倒怪物，再回答日文助詞（は・が・も・で・に・から・まで）選擇題。共 2 章，每章 5 個關卡加 1 場魔王戰，HP 歸零就得從頭再來。題目取材自《みんなの日本語》。",
+  "description": "化身元智騎士闖入地下城：先擊倒怪物，再回答日文助詞（は・が・も・で・に・から・まで）選擇題。共 3 章，每章 5 個關卡加 1 場魔王戰，每一關的怪物組合都不同，HP 歸零就得從頭再來。題目取材自《みんなの日本語》。",
   "controls": "W A S D 移動｜滑鼠瞄準、左鍵射擊｜空白鍵互動（進入關卡、打開魔法書教材、進傳送門）",
   "bundle_path": "/games/yuanze-knight/project.sb3",
   "adapter_path": "/games/yuanze-knight/adapter.json",
@@ -19,7 +19,14 @@
     {"key": "2-3", "chapter": 2, "title": "第二章・關卡 3", "kind": "stage", "questions_required": 2, "exp_reward": 80, "min_seconds": 6},
     {"key": "2-4", "chapter": 2, "title": "第二章・關卡 4", "kind": "stage", "questions_required": 2, "exp_reward": 80, "min_seconds": 6},
     {"key": "2-5", "chapter": 2, "title": "第二章・關卡 5", "kind": "stage", "questions_required": 2, "exp_reward": 80, "min_seconds": 6},
-    {"key": "2-X", "chapter": 2, "title": "第二章・最終魔王", "kind": "boss", "questions_required": 5, "exp_reward": 250, "min_seconds": 8}
+    {"key": "2-X", "chapter": 2, "title": "第二章・魔王戰", "kind": "boss", "questions_required": 5, "exp_reward": 250, "min_seconds": 8},
+    {"key": "3-1", "chapter": 3, "title": "第三章・關卡 1", "kind": "stage", "questions_required": 2, "exp_reward": 110, "min_seconds": 6},
+    {"key": "3-2", "chapter": 3, "title": "第三章・關卡 2", "kind": "stage", "questions_required": 2, "exp_reward": 110, "min_seconds": 6},
+    {"key": "3-3", "chapter": 3, "title": "第三章・關卡 3", "kind": "stage", "questions_required": 2, "exp_reward": 110, "min_seconds": 6},
+    {"key": "3-4", "chapter": 3, "title": "第三章・關卡 4", "kind": "stage", "questions_required": 2, "exp_reward": 110, "min_seconds": 6},
+    {"key": "3-5", "chapter": 3, "title": "第三章・關卡 5", "kind": "stage", "questions_required": 2, "exp_reward": 110, "min_seconds": 6},
+    {"key": "3-X", "chapter": 3, "title": "第三章・最終魔王", "kind": "boss", "questions_required": 7, "exp_reward": 350, "min_seconds": 10}
   ],
-  "questions_file": "yuanze_knight_questions.json"
+  "questions_file": "yuanze_knight_questions.json",
+  "extra_questions_file": "yuanze_knight_extra_questions.json"
 }

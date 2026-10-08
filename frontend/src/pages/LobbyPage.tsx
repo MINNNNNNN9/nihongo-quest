@@ -2,6 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 import { Link } from 'react-router-dom';
 
 import { ExpBar, LevelBadge } from '../components/ExpBar';
+import { QuestPanel } from '../components/QuestPanel';
 import { ErrorPanel, LoadingPanel, PageTitle } from '../components/ui';
 import { useMe } from '../features/auth/AuthContext';
 import { api } from '../lib/api';
@@ -13,17 +14,27 @@ function GameCard({ game }: { game: Game }) {
   return (
     <Link
       to={`/games/${game.slug}`}
-      className="panel group block overflow-hidden p-0 transition hover:-translate-y-1 hover:border-gold/70"
+      className="panel group block overflow-hidden p-0 transition hover:-translate-y-0.5 hover:border-shu/50 sm:p-0"
     >
-      <div className="relative grid h-36 place-items-center bg-[radial-gradient(circle_at_30%_20%,#3a3f76,#12142b)]">
-        <span className="font-pixel text-5xl text-gold drop-shadow-[0_4px_0_#00000088] transition group-hover:scale-110">
-          ⚔
+      {/* 封面：朱色底配上遊戲會練到的助詞 */}
+      <div className="relative grid h-36 place-items-center overflow-hidden bg-shu text-white">
+        <span
+          lang="ja"
+          aria-hidden="true"
+          className="select-none whitespace-nowrap font-serif text-8xl font-bold tracking-[0.1em] opacity-[0.13] transition duration-500 group-hover:scale-105"
+        >
+          はがもでに
         </span>
-        <span className="chip absolute left-3 top-3 border-shu/60 text-washi">Scratch</span>
-        {percent === 100 && <span className="chip absolute right-3 top-3 border-gold text-gold">全破</span>}
+        <span lang="ja" className="absolute font-serif text-2xl font-bold tracking-[0.3em]">
+          助詞の冒険
+        </span>
+        <span className="absolute left-3 top-3 rounded-full bg-white/20 px-2.5 py-0.5 text-xs">Scratch</span>
+        {percent === 100 && (
+          <span className="absolute right-3 top-3 rounded-full bg-white px-2.5 py-0.5 text-xs font-bold text-shu">全破</span>
+        )}
       </div>
       <div className="p-5">
-        <h3 className="heading text-xl">{game.title}</h3>
+        <h3 className="heading text-2xl">{game.title}</h3>
         <div className="text-sm text-mist">{game.subtitle}</div>
         <p className="mt-3 line-clamp-3 text-sm leading-relaxed text-washi/80">{game.description}</p>
         <div className="mt-4">
@@ -33,11 +44,11 @@ function GameCard({ game }: { game: Game }) {
               {game.levels_cleared} / {game.levels_total}
             </span>
           </div>
-          <div className="h-2 overflow-hidden rounded-sm bg-night-950">
+          <div className="h-2 overflow-hidden rounded-full bg-night-700">
             <div className="h-full bg-matcha transition-[width]" style={{ width: `${percent}%` }} />
           </div>
         </div>
-        <div className="btn-primary mt-4 w-full">{game.last_played_at ? '繼續冒險' : '開始冒險'}</div>
+        <div className="btn-danger mt-5 w-full">{game.last_played_at ? '繼續冒險' : '開始冒險'}</div>
       </div>
     </Link>
   );
@@ -52,35 +63,41 @@ export function LobbyPage() {
   const lastPlayed = games.data
     ?.filter((g) => g.last_played_at)
     .sort((a, b) => (a.last_played_at! < b.last_played_at! ? 1 : -1))[0];
+  const featured = lastPlayed ?? games.data?.[0];
   const cleared = dashboard.data?.levels.filter((l) => l.clears > 0) ?? [];
 
   return (
     <div className="space-y-6">
-      <section className="panel flex animate-rise flex-col gap-5 sm:flex-row sm:items-center">
-        <div className="px-3">
-          <LevelBadge level={me.progress.level} size="lg" />
-        </div>
+      <section className="panel flex animate-rise flex-col gap-6 sm:flex-row sm:items-center">
+        <LevelBadge level={me.progress.level} size="lg" />
         <div className="min-w-0 flex-1">
-          <div className="font-pixel text-xs tracking-[0.4em] text-shu">おかえりなさい</div>
-          <h1 className="truncate text-2xl font-black sm:text-3xl">{me.display_name}</h1>
-          <div className="mb-3 text-sm text-mist">
-            稱號：<span className="font-bold text-gold">{me.progress.title}</span>　累積 {me.total_exp} EXP
+          <div lang="ja" className="eyebrow">
+            おかえりなさい
+          </div>
+          <h1 className="heading mt-1 truncate text-3xl sm:text-4xl">{me.display_name}</h1>
+          <div className="mb-4 mt-1 text-sm text-mist">
+            <span lang="ja" className="font-bold text-washi">
+              {me.progress.title}
+            </span>
+            <span className="mx-2 text-night-600">|</span>累積 {me.total_exp} EXP
           </div>
           <ExpBar progress={me.progress} />
         </div>
-        {lastPlayed && (
-          <Link to={`/games/${lastPlayed.slug}`} className="btn-danger shrink-0 px-6 py-3">
-            ▶ 繼續《{lastPlayed.title}》
+        {featured && (
+          <Link to={`/games/${featured.slug}`} className="btn-primary shrink-0 px-6 py-3 text-base">
+            ▶ {lastPlayed ? '繼續' : '開始'}《{featured.title}》
           </Link>
         )}
       </section>
 
+      {/* 桌機：遊戲在左、今日任務在右；手機：遊戲在上 */}
+      <div className="grid items-start gap-6 lg:grid-cols-[minmax(0,1fr)_22rem]">
       <section>
         <PageTitle kana="クエスト">日文學習遊戲</PageTitle>
         {games.isPending && <LoadingPanel />}
         {games.isError && <ErrorPanel error={games.error} />}
         {games.data && (
-          <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="grid gap-5 sm:grid-cols-2">
             {games.data.map((game) => (
               <GameCard key={game.slug} game={game} />
             ))}
@@ -93,6 +110,8 @@ export function LobbyPage() {
           </div>
         )}
       </section>
+      <QuestPanel />
+      </div>
 
       <div className="grid gap-5 lg:grid-cols-2">
         <section className="panel">

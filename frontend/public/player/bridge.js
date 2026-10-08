@@ -3,6 +3,7 @@
 // 這個頁面以 TurboWarp scaffolding 自行載入 .sb3，所以拿得到 Scratch VM 本體，
 // 可以在「不修改原專案」的前提下觀察遊戲狀態，再用 postMessage 回報給外層的 React。
 // （scratch.mit.edu 的官方嵌入 iframe 是跨來源的，外層頁面讀不到任何遊戲內部資料。）
+import { isTouchDevice, setupTouchControls } from './touch.js';
 import { createTracker } from './tracker.js';
 
 const SOURCE = 'nihongo-quest-game';
@@ -33,6 +34,24 @@ async function fetchOk(url, what) {
   const response = await fetch(url);
   if (!response.ok) throw new Error(`${what}（HTTP ${response.status}）`);
   return response;
+}
+
+/** 邊下載邊更新進度（遊戲檔有十幾 MB）。伺服器沒給大小或瀏覽器不支援串流時，就照一般方式整個讀完。 */
+async function download(response) {
+  const total = Number(response.headers.get('Content-Length'));
+  if (!response.body || !total) return response.arrayBuffer();
+  const reader = response.body.getReader();
+  const data = new Uint8Array(total);
+  let received = 0;
+  for (;;) {
+    const { done, value } = await reader.read();
+    if (done) break;
+    if (received + value.length > total) return new Blob([data.subarray(0, received), value]).arrayBuffer(); // 大小和標頭不符
+    data.set(value, received);
+    received += value.length;
+    statusText.textContent = `下載遊戲資料中… ${Math.round((received / total) * 100)}%`;
+  }
+  return data.buffer;
 }
 
 /** 在 VM 上掛鉤，把背景切換與廣播交給 tracker。 */
@@ -100,7 +119,7 @@ async function main() {
   scaffolding.appendTo(document.getElementById('project'));
 
   statusText.textContent = '下載遊戲資料中…';
-  const project = await (await fetchOk(`${base}/project.sb3`, '讀不到遊戲檔')).arrayBuffer();
+  const project = await download(await fetchOk(`${base}/project.sb3`, '讀不到遊戲檔'));
   statusText.textContent = '載入素材中…';
   await scaffolding.loadProject(project);
 
@@ -113,6 +132,7 @@ async function main() {
   // 瀏覽器要求先有使用者操作才能播放聲音，所以由按鈕啟動綠旗
   startButton.addEventListener('click', () => {
     overlay.hidden = true;
+    if (isTouchDevice()) setupTouchControls(scaffolding, document.getElementById('touch'));
     scaffolding.start();
     window.focus();
   });

@@ -8,6 +8,8 @@ class ExperienceTransaction(models.Model):
 
     class Reason(models.TextChoices):
         LEVEL_CLEAR = "level_clear", "通關獎勵"
+        REVIEW = "review", "錯題複習"
+        QUEST = "quest", "每日任務"
         ADJUSTMENT = "adjustment", "管理員調整"
 
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="experience")
@@ -17,6 +19,8 @@ class ExperienceTransaction(models.Model):
     learning_record = models.OneToOneField(
         "learning.LearningRecord", on_delete=models.PROTECT, null=True, blank=True, related_name="experience"
     )
+    # 只能領一次的獎勵用它去重，例如每日任務「2026-10-08:correct_10」；可重複的獎勵留空
+    ref = models.CharField(max_length=40, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
@@ -28,4 +32,18 @@ class ExperienceTransaction(models.Model):
                 condition=~Q(reason="level_clear") | Q(learning_record__isnull=False),
                 name="exp_level_clear_has_record",
             ),
+            models.UniqueConstraint(
+                fields=["user", "reason", "ref"], condition=~Q(ref=""), name="exp_unique_ref_per_reason"
+            ),
         ]
+
+
+class AchievementUnlock(models.Model):
+    """玩家已解鎖的成就。成就的定義（名稱、條件）寫在 quests.py，這裡只記錄解鎖時間。"""
+
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="achievements")
+    key = models.CharField(max_length=30)
+    unlocked_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        constraints = [models.UniqueConstraint(fields=["user", "key"], name="achievement_unique_per_user")]

@@ -56,10 +56,10 @@ function ProfileForm({ me }: { me: Profile }) {
           onChange={(e) => setForm({ ...form, email: e.target.value })}
         />
       </div>
-      <label className="flex cursor-pointer items-start gap-3 rounded bg-night-900 p-3">
+      <label className="flex cursor-pointer items-start gap-3 rounded-lg bg-night-900 p-3">
         <input
           type="checkbox"
-          className="mt-1 h-4 w-4 accent-[#f2c14e]"
+          className="mt-1 h-4 w-4 accent-shu"
           checked={form.show_on_leaderboard}
           onChange={(e) => setForm({ ...form, show_on_leaderboard: e.target.checked })}
         />
@@ -147,7 +147,7 @@ export function ProfilePage() {
           <LevelBadge level={me.progress.level} size="lg" />
         </div>
         <div className="min-w-0 flex-1">
-          <div className="text-2xl font-black">{me.display_name}</div>
+          <div className="text-2xl font-bold">{me.display_name}</div>
           <div className="mb-3 text-sm text-mist">
             帳號 {me.username}　稱號 <span className="font-bold text-gold">{me.progress.title}</span>　
             {new Date(me.created_at).toLocaleDateString('zh-TW')} 加入

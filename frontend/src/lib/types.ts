@@ -72,6 +72,7 @@ export interface EventResult {
   duplicate: boolean;
   is_correct: boolean | null;
   reward: Reward | null;
+  feedback: Feedback | null;
 }
 
 export interface Dashboard {
@@ -94,8 +95,11 @@ export interface Dashboard {
     key: string;
     prompt: string;
     context: string;
+    prompt_ruby: RubySegment[];
+    context_ruby: RubySegment[];
     hint_zh: string;
     correct_answer: string;
+    topic: string;
     topic_label: string;
     wrong: number;
     attempts: number;
@@ -143,4 +147,106 @@ export interface ExperienceEntry {
   level_title: string | null;
   is_first_clear: boolean | null;
   created_at: string;
+}
+
+/** [文字, 假名]；不需要標音的片段假名為空字串 */
+export type RubySegment = [string, string];
+
+/** 作答後的解說（遊戲內作答與錯題複習共用） */
+export interface Feedback {
+  question_id: number;
+  context: string;
+  prompt: string;
+  context_ruby: RubySegment[];
+  prompt_ruby: RubySegment[];
+  choice: string;
+  correct_answer: string;
+  hint_zh: string;
+  topic: string;
+  topic_label: string;
+  note: string;
+}
+
+export interface ReviewQuestion {
+  id: number;
+  topic: string;
+  topic_label: string;
+  context: string;
+  prompt: string;
+  context_ruby: RubySegment[];
+  prompt_ruby: RubySegment[];
+  choices: string[];
+  debt: number;
+}
+
+export interface ReviewSummary {
+  pending: number;
+  exp_today: number;
+  exp_daily_cap: number;
+  topics: { topic: string; label: string; total: number; pending: number }[];
+}
+
+export interface ReviewAnswer {
+  is_correct: boolean;
+  exp_awarded: number;
+  debt: number;
+  feedback: Feedback;
+  progress: Progress;
+}
+
+export interface Quest {
+  key: string;
+  title: string;
+  detail: string;
+  target: number;
+  reward: number;
+  link: string;
+  progress: number;
+  done: boolean;
+  claimed: boolean;
+}
+
+export interface Achievement {
+  key: string;
+  icon: string;
+  title: string;
+  description: string;
+  progress: number;
+  target: number;
+  unlocked_at: string | null;
+  is_new: boolean;
+}
+
+export interface QuestOverview {
+  streak: { current: number; best: number; active_today: boolean };
+  quests: Quest[];
+  achievements: Achievement[];
+}
+
+export interface ClassroomSummary {
+  code: string;
+  name: string;
+  teacher_name: string;
+  is_teacher: boolean;
+  member_count: number;
+  created_at: string;
+}
+
+export interface ClassroomDetail extends ClassroomSummary {
+  leaderboard: LeaderboardEntry[];
+  report: {
+    students: {
+      display_name: string;
+      level: number;
+      total_exp: number;
+      answered: number;
+      accuracy: number | null;
+      levels_cleared: number;
+      last_active: string | null;
+    }[];
+    questions_answered: number;
+    accuracy: number | null;
+    topics: Dashboard['topics'];
+    most_missed: Dashboard['most_missed'];
+  } | null;
 }

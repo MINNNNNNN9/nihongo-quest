@@ -24,8 +24,8 @@ const MEDAL = ['🥇', '🥈', '🥉'];
 function Row({ entry, unit }: { entry: LeaderboardEntry; unit: string }) {
   return (
     <li
-      className={`flex items-center gap-3 rounded px-3 py-2 ${
-        entry.is_me ? 'border-2 border-gold bg-gold/10' : 'bg-night-900'
+      className={`flex items-center gap-3 rounded-lg px-3 py-2 ${
+        entry.is_me ? 'border border-gold bg-gold/10' : 'bg-night-900'
       }`}
     >
       <span className="w-9 text-center font-pixel text-lg text-mist">{MEDAL[entry.rank - 1] ?? entry.rank}</span>
@@ -90,7 +90,7 @@ export function LeaderboardPage() {
             {data.hidden ? (
               <p className="text-sm text-mist">
                 你已設定不公開於排行榜。可以到{' '}
-                <Link to="/profile" className="font-bold text-gold hover:underline">
+                <Link to="/profile" className="font-bold text-shu hover:underline">
                   冒險者證
                 </Link>{' '}
                 重新開啟。

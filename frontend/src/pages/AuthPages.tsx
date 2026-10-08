@@ -1,7 +1,7 @@
 import { useState, type FormEvent } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 
-import { Torii } from '../components/Layout';
+import { Torii, Wordmark } from '../components/Layout';
 import { FormError } from '../components/ui';
 import { useAuthActions } from '../features/auth/AuthContext';
 import { ApiError } from '../lib/api';
@@ -11,14 +11,12 @@ function AuthShell({ title, kana, children }: { title: string; kana: string; chi
     <div className="grid min-h-dvh place-items-center px-4 py-10">
       <div className="w-full max-w-md animate-rise">
         <div className="mb-6 text-center">
-          <Torii className="mx-auto h-16 w-16 text-shu drop-shadow-[0_0_20px_#e2503c88]" />
-          <div className="mt-2 font-pixel text-3xl tracking-[0.2em]">
-            Nihongo<span className="text-gold">Quest</span>
-          </div>
-          <div className="mt-1 text-sm tracking-widest text-mist">日文冒險學習平台</div>
+          <Torii className="mx-auto h-14 w-14 text-shu" />
+          <Wordmark className="mt-3 block text-4xl" />
+          <div className="mt-2 text-sm tracking-[0.3em] text-mist">日文冒險學習平台</div>
         </div>
         <div className="panel">
-          <div className="font-pixel text-xs tracking-[0.4em] text-shu">{kana}</div>
+          <div className="eyebrow">{kana}</div>
           <h1 className="heading mb-4 text-xl">{title}</h1>
           {children}
         </div>
@@ -74,7 +72,7 @@ export function LoginPage() {
       </form>
       <p className="mt-4 text-center text-sm text-mist">
         還沒有冒險者證？{' '}
-        <Link to="/register" className="font-bold text-gold hover:underline">
+        <Link to="/register" className="font-bold text-shu hover:underline">
           立即註冊
         </Link>
       </p>
@@ -148,7 +146,7 @@ export function RegisterPage() {
       </form>
       <p className="mt-4 text-center text-sm text-mist">
         已經是冒險者？{' '}
-        <Link to="/login" className="font-bold text-gold hover:underline">
+        <Link to="/login" className="font-bold text-shu hover:underline">
           登入
         </Link>
       </p>

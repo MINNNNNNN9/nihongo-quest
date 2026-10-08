@@ -1,4 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
+import { Link } from 'react-router-dom';
 import {
   Area,
   AreaChart,
@@ -12,25 +13,48 @@ import {
   YAxis,
 } from 'recharts';
 
+import { AchievementGrid, useQuestOverview } from '../components/QuestPanel';
+import { FuriganaToggle, RubyText } from '../components/Ruby';
 import { ErrorPanel, LoadingPanel, PageTitle, StatCard } from '../components/ui';
 import { api } from '../lib/api';
+import { themeColor, useTheme } from '../lib/theme';
 import { formatDateTime, formatDuration, formatPercent, SESSION_STATUS_LABEL } from '../lib/format';
 import type { Dashboard } from '../lib/types';
 
-const AXIS = { fill: '#a9add0', fontSize: 12 };
-const TOOLTIP = {
-  contentStyle: { background: '#12142b', border: '2px solid #f2c14e55', borderRadius: 6, color: '#f6efdd' },
-  labelStyle: { color: '#f2c14e' },
-  cursor: { fill: '#ffffff10' },
-};
+/** 圖表用的顏色跟著目前的配色主題走 */
+function chartColors() {
+  const c = {
+    grid: themeColor('night-600', '#3a3f76'),
+    gold: themeColor('gold', '#f2c14e'),
+    good: themeColor('matcha', '#86c06c'),
+    bad: themeColor('shu', '#e2503c'),
+  };
+  return {
+    ...c,
+    axis: { fill: themeColor('mist', '#a9add0'), fontSize: 12 },
+    tooltip: {
+      contentStyle: {
+        background: themeColor('night-900', '#12142b'),
+        border: `2px solid ${c.gold}55`,
+        borderRadius: 6,
+        color: themeColor('washi', '#f6efdd'),
+      },
+      labelStyle: { color: c.gold },
+      cursor: { fill: themeColor('mist', '#a9add0') + '22' },
+    },
+    accuracy: (rate: number) => (rate >= 0.8 ? c.good : rate >= 0.5 ? c.gold : c.bad),
+  };
+}
 
-const accuracyColor = (rate: number) => (rate >= 0.8 ? '#86c06c' : rate >= 0.5 ? '#f2c14e' : '#e2503c');
 
 export function DashboardPage() {
   const { data, isPending, isError, error } = useQuery({
     queryKey: ['dashboard'],
     queryFn: () => api.get<Dashboard>('/player/dashboard/'),
   });
+  const quests = useQuestOverview();
+  useTheme(); // 換主題時重新算圖表顏色
+  const colors = chartColors();
   if (isPending) return <LoadingPanel />;
   if (isError) return <ErrorPanel error={error} />;
 
@@ -40,12 +64,14 @@ export function DashboardPage() {
 
   return (
     <div className="space-y-6">
-      <PageTitle kana="しゅぎょうのきろく">修行紀錄</PageTitle>
+      <PageTitle kana="しゅぎょうのきろく" aside={<FuriganaToggle />}>
+        修行紀錄
+      </PageTitle>
 
       <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
         <StatCard label="累積遊戲次數" value={data.total_sessions} hint={`其中 ${data.cleared_sessions} 次全破`} />
         <StatCard label="總學習時間" value={formatDuration(data.total_seconds)} />
-        <StatCard label="助詞題正確率" value={formatPercent(data.accuracy)} hint={`共作答 ${data.questions_answered} 次`} />
+        <StatCard label="助詞題正確率" value={formatPercent(data.accuracy)} hint={`共作答 ${data.questions_answered} 次（含錯題複習）`} />
         <StatCard label="累積經驗值" value={data.progress.total_exp} hint={`Lv.${data.progress.level} ${data.progress.title}`} />
       </div>
 
@@ -59,11 +85,11 @@ export function DashboardPage() {
             <div className="h-64">
               <ResponsiveContainer>
                 <BarChart data={topics} layout="vertical" margin={{ left: 8, right: 24 }}>
-                  <CartesianGrid stroke="#3a3f76" strokeDasharray="3 3" horizontal={false} />
-                  <XAxis type="number" domain={[0, 100]} unit="%" tick={AXIS} stroke="#3a3f76" />
-                  <YAxis type="category" dataKey="label" width={118} tick={AXIS} stroke="#3a3f76" />
+                  <CartesianGrid stroke={colors.grid} strokeDasharray="3 3" horizontal={false} />
+                  <XAxis type="number" domain={[0, 100]} unit="%" tick={colors.axis} stroke={colors.grid} />
+                  <YAxis type="category" dataKey="label" width={118} tick={colors.axis} stroke={colors.grid} />
                   <Tooltip
-                    {...TOOLTIP}
+                    {...colors.tooltip}
                     formatter={(value: number, _name, item) => [
                       `${value}%（${item.payload.correct}/${item.payload.attempts}）`,
                       '正確率',
@@ -71,7 +97,7 @@ export function DashboardPage() {
                   />
                   <Bar dataKey="percent" radius={[0, 4, 4, 0]} isAnimationActive={false}>
                     {topics.map((t) => (
-                      <Cell key={t.topic} fill={accuracyColor(t.accuracy ?? 0)} />
+                      <Cell key={t.topic} fill={colors.accuracy(t.accuracy ?? 0)} />
                     ))}
                   </Bar>
                 </BarChart>
@@ -88,18 +114,18 @@ export function DashboardPage() {
               <AreaChart data={history} margin={{ left: -8, right: 12 }}>
                 <defs>
                   <linearGradient id="exp" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stopColor="#f2c14e" stopOpacity={0.7} />
-                    <stop offset="100%" stopColor="#f2c14e" stopOpacity={0} />
+                    <stop offset="0%" stopColor={colors.gold} stopOpacity={0.7} />
+                    <stop offset="100%" stopColor={colors.gold} stopOpacity={0} />
                   </linearGradient>
                 </defs>
-                <CartesianGrid stroke="#3a3f76" strokeDasharray="3 3" vertical={false} />
-                <XAxis dataKey="label" tick={AXIS} stroke="#3a3f76" interval="preserveStartEnd" />
-                <YAxis tick={AXIS} stroke="#3a3f76" allowDecimals={false} />
+                <CartesianGrid stroke={colors.grid} strokeDasharray="3 3" vertical={false} />
+                <XAxis dataKey="label" tick={colors.axis} stroke={colors.grid} interval="preserveStartEnd" />
+                <YAxis tick={colors.axis} stroke={colors.grid} allowDecimals={false} />
                 <Tooltip
-                  {...TOOLTIP}
+                  {...colors.tooltip}
                   formatter={(value: number, name) => [value, name === 'total' ? '累積 EXP' : '當日獲得']}
                 />
-                <Area type="monotone" dataKey="total" stroke="#f2c14e" strokeWidth={2} fill="url(#exp)" isAnimationActive={false} />
+                <Area type="monotone" dataKey="total" stroke={colors.gold} strokeWidth={2} fill="url(#exp)" isAnimationActive={false} />
               </AreaChart>
             </ResponsiveContainer>
           </div>
@@ -114,17 +140,23 @@ export function DashboardPage() {
           ) : (
             <ol className="space-y-3">
               {data.most_missed.map((q) => (
-                <li key={q.key} className="rounded bg-night-900 p-3">
+                <li key={q.key} className="rounded-lg bg-night-900 p-3">
                   <div className="flex items-start justify-between gap-3">
-                    <div lang="ja" className="min-w-0">
-                      {q.context && <div className="text-sm text-mist">{q.context}</div>}
-                      <div className="font-bold">{q.prompt}</div>
+                    <div className="min-w-0">
+                      {q.context && (
+                        <div className="text-sm text-mist">
+                          <RubyText segments={q.context_ruby} />
+                        </div>
+                      )}
+                      <div className="font-bold leading-loose">
+                        <RubyText segments={q.prompt_ruby} />
+                      </div>
                     </div>
                     <span className="chip shrink-0 border-shu/60 text-shu">錯 {q.wrong} 次</span>
                   </div>
                   <div className="mt-2 flex flex-wrap items-center gap-2 text-sm">
                     <span className="text-mist">正解</span>
-                    <span lang="ja" className="rounded bg-matcha/20 px-2 font-bold text-matcha">
+                    <span lang="ja" className="rounded-lg bg-matcha/20 px-2 font-bold text-matcha">
                       {q.correct_answer}
                     </span>
                     <span className="chip">{q.topic_label}</span>
@@ -132,6 +164,11 @@ export function DashboardPage() {
                   {q.hint_zh && <div className="mt-1 text-xs text-mist">提示：{q.hint_zh}</div>}
                 </li>
               ))}
+              <li>
+                <Link to="/review" className="btn-primary w-full">
+                  去錯題複習把它們練起來 ▶
+                </Link>
+              </li>
             </ol>
           )}
         </section>
@@ -150,7 +187,7 @@ export function DashboardPage() {
                       {level.clears}/{level.attempts}　{formatPercent(level.completion_rate)}
                     </span>
                   </div>
-                  <div className="h-2 overflow-hidden rounded-sm bg-night-950">
+                  <div className="h-2 overflow-hidden rounded-full bg-night-700">
                     <div className="h-full bg-sora" style={{ width: `${(level.completion_rate ?? 0) * 100}%` }} />
                   </div>
                 </li>
@@ -160,6 +197,8 @@ export function DashboardPage() {
         </section>
       </div>
 
+      {quests.data && <AchievementGrid achievements={quests.data.achievements} />}
+
       <section className="panel">
         <h2 className="heading mb-3 text-lg">最近學習歷史</h2>
         {data.recent_sessions.length === 0 ? (
@@ -167,7 +206,7 @@ export function DashboardPage() {
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full min-w-[32rem] text-left text-sm">
-              <thead className="text-xs tracking-widest text-mist">
+              <thead className="text-xs tracking-wide text-mist">
                 <tr>
                   <th className="pb-2 font-bold">時間</th>
                   <th className="pb-2 font-bold">遊戲</th>

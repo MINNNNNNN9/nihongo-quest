@@ -5,8 +5,9 @@ from rest_framework.views import APIView
 
 from apps.accounts.serializers import ProfileSerializer
 
-from . import stats
+from . import quests, stats
 from .models import ExperienceTransaction
+from .services import progress_for
 
 
 class ExperienceSerializer(serializers.ModelSerializer):
@@ -39,6 +40,23 @@ class DashboardView(APIView):
     @extend_schema(responses={200: dict})
     def get(self, request):
         return Response(stats.dashboard(request.user))
+
+
+class QuestOverviewView(APIView):
+    """連續學習天數、今日任務與成就。"""
+
+    @extend_schema(responses={200: dict})
+    def get(self, request):
+        return Response(quests.overview(request.user))
+
+
+class QuestClaimView(APIView):
+    throttle_scope = "game_events"
+
+    @extend_schema(request=None, responses={200: dict})
+    def post(self, request, key):
+        awarded = quests.claim_quest(request.user, key)
+        return Response({"exp_awarded": awarded, "progress": progress_for(request.user)})
 
 
 class LeaderboardView(APIView):

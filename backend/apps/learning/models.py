@@ -82,3 +82,16 @@ class QuestionAttempt(models.Model):
 
     class Meta:
         indexes = [models.Index(fields=["question", "is_correct"], name="attempt_question_result_idx")]
+
+
+class ReviewAttempt(models.Model):
+    """網頁複習模式的一次作答。題目由伺服器出、對錯由伺服器判定，所以一律可信。"""
+
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="review_attempts")
+    question = models.ForeignKey("games.Question", on_delete=models.PROTECT, related_name="review_attempts")
+    choice = models.CharField("玩家選的選項", max_length=40)
+    is_correct = models.BooleanField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        indexes = [models.Index(fields=["user", "-created_at"], name="review_user_recent_idx")]

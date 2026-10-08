@@ -1,89 +1,112 @@
 @import "tailwindcss";
 
+/*
+ * 設計系統：和モダン（留白、墨色文字、單一朱色強調）。
+ * 色票名稱沿用舊版，意義如下：
+ *   night-950 頁面底色／night-900 內嵌區塊／night-800 卡片／night-700 hover／night-600 邊線
+ *   washi 主要文字／mist 次要文字／shu 主強調（朱）／gold 獎勵與 EXP／matcha 正確／sora 資訊
+ * 預設是淺色，深色在下方的 [data-theme="dark"]。
+ */
 @theme {
-  --font-sans: "Zen Maru Gothic", "Noto Sans TC", "PingFang TC", system-ui, sans-serif;
-  --font-pixel: "DotGothic16", "Zen Maru Gothic", monospace;
+  --font-sans: "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", system-ui, sans-serif;
+  --font-serif: "Noto Serif TC", "Noto Serif JP", "Songti TC", "PMingLiU", serif;
+  /* 舊名稱：原本是像素字體，現在是標題與數字用的襯線體 */
+  --font-pixel: "Noto Serif TC", "Noto Serif JP", "Songti TC", "PMingLiU", serif;
 
-  --color-night-950: #0a0c1c;
-  --color-night-900: #12142b;
-  --color-night-800: #1b1e3d;
-  --color-night-700: #272b55;
-  --color-night-600: #3a3f76;
-  --color-washi: #f6efdd;
-  --color-mist: #a9add0;
-  --color-shu: #e2503c;
-  --color-gold: #f2c14e;
-  --color-matcha: #86c06c;
-  --color-sora: #6fb7e6;
+  --color-night-950: #f7f5f0;
+  --color-night-900: #f2efe8;
+  --color-night-800: #ffffff;
+  --color-night-700: #ece8df;
+  --color-night-600: #ddd7cb;
+  --color-washi: #1c1b19;
+  --color-mist: #6f6b63;
+  --color-shu: #c2412d;
+  --color-gold: #9a6b0f;
+  --color-matcha: #2e7d57;
+  --color-sora: #2f6690;
+  --color-shadow: #1c1b1914;
 
-  --animate-rise: rise 0.5s ease-out both;
-  --animate-pop: pop 0.6s cubic-bezier(0.2, 1.6, 0.4, 1) both;
-  --animate-shine: shine 2.4s linear infinite;
-  --animate-float: float 3s ease-in-out infinite;
+  --animate-rise: rise 0.4s ease-out both;
+  --animate-pop: pop 0.5s cubic-bezier(0.2, 1.4, 0.4, 1) both;
 
   @keyframes rise {
-    from { opacity: 0; transform: translateY(12px); }
+    from { opacity: 0; transform: translateY(8px); }
     to { opacity: 1; transform: translateY(0); }
   }
   @keyframes pop {
-    from { opacity: 0; transform: scale(0.4) rotate(-6deg); }
-    to { opacity: 1; transform: scale(1) rotate(0); }
-  }
-  @keyframes shine {
-    from { background-position: 200% 0; }
-    to { background-position: -200% 0; }
-  }
-  @keyframes float {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-6px); }
+    from { opacity: 0; transform: scale(0.9); }
+    to { opacity: 1; transform: scale(1); }
   }
 }
 
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --color-night-950: #131211;
+  --color-night-900: #1b1a18;
+  --color-night-800: #22201e;
+  --color-night-700: #2e2c29;
+  --color-night-600: #413e3a;
+  --color-washi: #ece8e0;
+  --color-mist: #a39d93;
+  --color-shu: #e2604a;
+  --color-gold: #e0b458;
+  --color-matcha: #7cc79b;
+  --color-sora: #8dbde2;
+  --color-shadow: #00000066;
+}
+
 @layer base {
-  html { color-scheme: dark; }
+  html { color-scheme: light; }
   body {
     min-height: 100dvh;
     color: var(--color-washi);
     background-color: var(--color-night-950);
-    /* 青海波（せいがいは）紋樣＋夜空漸層 */
-    background-image:
-      radial-gradient(circle at 50% 100%, transparent 58%, #ffffff09 59%, #ffffff09 62%, transparent 63%),
-      radial-gradient(circle at 0% 50%, transparent 58%, #ffffff06 59%, #ffffff06 62%, transparent 63%),
-      radial-gradient(circle at 100% 50%, transparent 58%, #ffffff06 59%, #ffffff06 62%, transparent 63%),
-      radial-gradient(ellipse at 50% -10%, #2c2f6b 0%, transparent 60%);
-    background-size: 56px 28px, 56px 28px, 56px 28px, 100% 100%;
-    background-attachment: fixed;
+    font-family: var(--font-sans);
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
   }
-  :focus-visible { outline: 2px solid var(--color-gold); outline-offset: 2px; }
+  h1, h2, h3 { font-family: var(--font-serif); }
+  /* 日文句子用日文字形的明朝體；假名標註維持黑體比較好讀 */
+  :lang(ja) { font-family: "Noto Serif JP", "Noto Serif TC", serif; }
+  rt { font-family: var(--font-sans); letter-spacing: 0; }
+  :focus-visible { outline: 2px solid var(--color-shu); outline-offset: 2px; }
+  ::selection { background: color-mix(in srgb, var(--color-shu) 22%, transparent); }
 }
 
 @layer components {
   .panel {
-    @apply rounded-lg border-2 border-gold/25 bg-night-800/85 p-5 shadow-[0_6px_0_#00000055] backdrop-blur-sm;
+    @apply rounded-xl border border-night-600 bg-night-800 p-5
+      shadow-[0_1px_2px_var(--color-shadow),0_14px_32px_-18px_var(--color-shadow)] sm:p-6;
   }
   .heading {
-    @apply font-pixel tracking-widest text-gold;
+    @apply font-serif font-bold tracking-wide text-washi;
+  }
+  /* 標題上方的小字（假名） */
+  .eyebrow {
+    @apply font-serif text-xs tracking-[0.3em] text-shu;
   }
   .btn-primary, .btn-danger, .btn-ghost {
-    @apply inline-flex cursor-pointer items-center justify-center gap-2 rounded px-4 py-2 font-bold tracking-wider transition
-      disabled:cursor-not-allowed disabled:opacity-50;
+    @apply inline-flex cursor-pointer items-center justify-center gap-2 rounded-lg px-4 py-2 text-sm font-bold
+      transition disabled:cursor-not-allowed disabled:opacity-45;
   }
+  /* 主要動作：朱色 */
   .btn-primary {
-    @apply bg-gradient-to-b from-[#ffd97a] to-[#e8a93a] text-night-950 shadow-[0_4px_0_#8a5a12]
-      hover:brightness-110 active:translate-y-[3px] active:shadow-[0_1px_0_#8a5a12];
+    @apply bg-shu text-white hover:brightness-110 active:brightness-95;
   }
+  /* 次要的實心按鈕、選中的分頁：墨色（類別名稱是舊的，不代表危險動作） */
   .btn-danger {
-    @apply bg-shu text-white shadow-[0_4px_0_#7c2418] hover:brightness-110 active:translate-y-[3px] active:shadow-none;
+    @apply bg-washi text-night-800 hover:opacity-90 active:opacity-80;
   }
   .btn-ghost {
-    @apply border-2 border-night-600 text-washi hover:border-gold/60 hover:text-gold;
+    @apply border border-night-600 bg-night-800 text-washi hover:bg-night-700;
   }
   .field {
-    @apply w-full rounded border-2 border-night-600 bg-night-900 px-3 py-2 text-washi placeholder:text-mist/50
-      focus:border-gold focus:outline-none;
+    @apply w-full rounded-lg border border-night-600 bg-night-800 px-3 py-2.5 text-washi placeholder:text-mist/60
+      focus:border-shu focus:ring-2 focus:ring-shu/20 focus:outline-none;
   }
   .label {
-    @apply mb-1 block text-sm font-bold tracking-wider text-mist;
+    @apply mb-1.5 block text-sm font-medium text-mist;
   }
   .chip {
     @apply inline-flex items-center rounded-full border border-night-600 bg-night-900 px-2.5 py-0.5 text-xs text-mist;

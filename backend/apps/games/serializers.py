@@ -26,7 +26,7 @@ class GameDetailSerializer(GameSerializer):
 
     def get_topics(self, obj) -> list[dict]:
         counts = {}
-        for topic in obj.questions.values_list("topic", flat=True):
+        for topic in obj.questions.filter(in_game=True).values_list("topic", flat=True):
             counts[topic] = counts.get(topic, 0) + 1
         return [{"topic": t, "label": TOPIC_LABELS.get(t, t), "questions": n} for t, n in counts.items()]
 

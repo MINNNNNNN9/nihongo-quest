@@ -9,8 +9,8 @@ pytestmark = pytest.mark.django_db
 
 
 def test_seed_matches_original_game(game):
-    assert game.levels.count() == 12
-    assert game.questions.count() == 75
+    assert game.levels.count() == 18
+    assert game.questions.filter(in_game=True).count() == 75
     q = game.questions.get(key="Q01")
     assert q.prompt == "私（？）エンジニアです。" and q.correct_answer == "も"
     assert game.questions.get(key="Q48").topic == "none"
@@ -45,7 +45,7 @@ def test_client_cannot_dictate_exp(player, user):
 def test_duplicate_event_does_not_award_twice(player, user):
     player.clear("1-1")
     replay = player.send("LEVEL_COMPLETED", "1-1", seq=player.seq)  # 同一序號重送
-    assert replay.json()["data"] == {"duplicate": True, "is_correct": None, "reward": None}
+    assert replay.json()["data"] == {"duplicate": True, "is_correct": None, "reward": None, "feedback": None}
     again = player.send("LEVEL_COMPLETED", "1-1")  # 新序號、但關卡已完成
     assert again.json()["data"]["duplicate"] is True
     user.profile.refresh_from_db()
@@ -141,17 +141,17 @@ def test_full_run_and_learning_records(player, client, game, user):
     assert done["status"] == "cleared" and done["total_score"] == 620
 
     user.profile.refresh_from_db()
-    assert user.profile.total_exp == 5 * 50 + 150 + 5 * 80 + 250  # 1050
+    assert user.profile.total_exp == 5 * 50 + 150 + 5 * 80 + 250 + 5 * 110 + 350  # 1050
 
     records = client.get("/api/learning-records/").json()["data"]
-    assert records["count"] == 12
+    assert records["count"] == 18
     first = records["results"][-1]
     assert first["level_key"] == "1-1" and first["completed"] and first["exp_awarded"] == 50
 
     levels = client.get(f"/api/games/{game.slug}/levels/").json()["data"]
     assert all(level["cleared"] for level in levels)
     listing = client.get("/api/games/").json()["data"][0]
-    assert listing["levels_total"] == 12 and listing["levels_cleared"] == 12
+    assert listing["levels_total"] == 18 and listing["levels_cleared"] == 18
 
 
 def test_learning_records_are_private(player, make_user):

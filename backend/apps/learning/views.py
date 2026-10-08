@@ -6,12 +6,15 @@ from rest_framework.views import APIView
 
 from apps.games.models import Game
 
-from . import services
+from apps.gamification.services import progress_for
+
+from . import review, services
 from .models import LearningRecord
 from .serializers import (
     EventResultSerializer,
     EventSerializer,
     LearningRecordSerializer,
+    ReviewAnswerSerializer,
     SessionCompleteSerializer,
     SessionCreateSerializer,
     SessionSerializer,
@@ -68,3 +71,25 @@ class LearningRecordListView(generics.ListAPIView):
         )
         game = self.request.query_params.get("game")
         return qs.filter(level__game__slug=game) if game else qs
+
+
+class ReviewSummaryView(APIView):
+    @extend_schema(responses={200: dict})
+    def get(self, request):
+        return Response(review.summary(request.user))
+
+
+class ReviewNextView(APIView):
+    @extend_schema(responses={200: dict})
+    def get(self, request):
+        mode = "mistakes" if request.query_params.get("mode") == "mistakes" else "mixed"
+        return Response(review.next_batch(request.user, mode, request.query_params.get("topic") or None))
+
+
+class ReviewAnswerView(GameEventView):
+    @extend_schema(request=ReviewAnswerSerializer, responses={200: dict})
+    def post(self, request):
+        serializer = ReviewAnswerSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        result = review.answer(request.user, **serializer.validated_data)
+        return Response({**result, "progress": progress_for(request.user)})

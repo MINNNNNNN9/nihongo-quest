@@ -54,6 +54,7 @@ class EventResultSerializer(serializers.Serializer):
     duplicate = serializers.BooleanField()
     is_correct = serializers.BooleanField(allow_null=True)
     reward = RewardSerializer(allow_null=True)
+    feedback = serializers.DictField(allow_null=True)
 
 
 class LearningRecordSerializer(serializers.ModelSerializer):
@@ -75,3 +76,8 @@ class LearningRecordSerializer(serializers.ModelSerializer):
     def get_exp_awarded(self, obj) -> int:
         tx = getattr(obj, "experience", None)
         return tx.amount if tx else 0
+
+
+class ReviewAnswerSerializer(serializers.Serializer):
+    question_id = serializers.IntegerField(min_value=1)
+    choice = serializers.CharField(max_length=40)

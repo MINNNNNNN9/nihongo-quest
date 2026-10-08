@@ -52,7 +52,7 @@ export function useAuthActions() {
 }
 
 export function FullPageMessage({ children }: { children: React.ReactNode }) {
-  return <div className="grid min-h-dvh place-items-center font-pixel tracking-widest text-mist">{children}</div>;
+  return <div className="grid min-h-dvh place-items-center font-pixel tracking-wide text-mist">{children}</div>;
 }
 
 /** 需要登入的路由：未登入導向登入頁，並記住原本要去的位置。 */

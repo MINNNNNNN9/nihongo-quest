@@ -1,0 +1,19 @@
+# Render Blueprint：在 Render 選「New → Blueprint」並連到這個 repo，就會照這份設定建立服務。
+# 步驟見 docs/deployment.md 的「部署到 Render（免費方案）」。
+services:
+  - type: web
+    name: nihongo-quest
+    runtime: docker
+    plan: free
+    region: singapore
+    dockerfilePath: ./deploy/render/Dockerfile
+    dockerContext: .
+    healthCheckPath: /healthz
+    envVars:
+      # 建立時會要求輸入：託管 PostgreSQL 的連線網址（例如 Neon 的 Connection string）
+      - key: DATABASE_URL
+        sync: false
+      - key: DJANGO_SECRET_KEY
+        generateValue: true
+      - key: DJANGO_DEBUG
+        value: "False"

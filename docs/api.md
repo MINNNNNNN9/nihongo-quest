@@ -37,7 +37,7 @@
 | 未登入 | 60／分 | `THROTTLE_ANON` |
 | 已登入 | 600／分 | `THROTTLE_USER` |
 | 註冊／登入／改密碼 | 10／分 | `THROTTLE_AUTH` |
-| 遊戲事件 | 240／分 | `THROTTLE_GAME_EVENTS` |
+| 遊戲事件、複習作答、領取任務 | 240／分 | `THROTTLE_GAME_EVENTS` |
 
 ## 端點
 
@@ -88,10 +88,51 @@
   "is_correct": true,             // 後端判定的結果（QUESTION_ANSWERED）
   "reward": {                     // 僅 LEVEL_COMPLETED 成功時
     "exp_awarded": 50, "is_first_clear": true, "leveled_up": false, "level_before": 1,
-    "progress": { "level": 1, "title": "見習騎士", "total_exp": 50, "exp_into_level": 50, "exp_for_next_level": 100 } } }
+    "progress": { "level": 1, "title": "見習騎士", "total_exp": 50, "exp_into_level": 50, "exp_for_next_level": 100 } },
+  "feedback": {                   // 僅 QUESTION_ANSWERED：給玩家看的解說
+    "prompt": "私（？）エンジニアです。", "prompt_ruby": [["私", "わたし"], ["（？）エンジニアです。", ""]],
+    "context": "…", "context_ruby": [], "choice": "が", "correct_answer": "も",
+    "hint_zh": "…", "topic": "mo", "topic_label": "も（也）", "note": "文法重點說明" } }
 ```
 
 請求中任何 `exp`、`score` 之類的欄位都會被忽略：EXP 只由後端依關卡設定決定。
+`*_ruby` 是假名標註，格式為 `[文字, 假名]` 片段的陣列（不需標音的片段假名為空字串）。
+
+### 錯題複習
+
+不經過 Scratch 的網頁小測驗：出題與判定都在後端，前端在作答前拿不到正解。
+題庫除了遊戲內的 75 題，還有只在複習出現的補充題（を・へ・と・の，`Question.in_game=false`）。
+
+| 方法 | 路徑 | 說明 |
+| --- | --- | --- |
+| GET | `/review/` | 待複習題數、今天已拿的複習 EXP、各助詞的題數與待複習數 |
+| GET | `/review/next/?mode=mixed｜mistakes&topic=` | 抽一輪（最多 10 題）。`mistakes` 只出待複習的題；`mixed` 出全部題目、答錯過的機率較高。回傳不含正解，選項順序隨機 |
+| POST | `/review/answer/` | `{question_id, choice}` → `{is_correct, exp_awarded, debt, feedback, progress}` |
+
+「待複習」的算法：每一題答錯 +1（上限 3）、答對 −1，大於 0 就是待複習；遊戲內的作答也會計入。
+複習答對一題 +2 EXP，每天上限 40。
+
+### 每日任務與成就
+
+| 方法 | 路徑 | 說明 |
+| --- | --- | --- |
+| GET | `/player/quests/` | `{streak, quests, achievements}`：連續學習天數、今日三個任務的進度、所有成就與進度（達成條件的成就在這次呼叫中解鎖，`is_new=true`） |
+| POST | `/player/quests/{key}/claim/` | 領取已完成任務的 EXP；未完成或已領過回 `409` |
+
+進度都由作答紀錄即時算出。任務每天依伺服器時區（Asia/Taipei）換日。
+
+### 班級
+
+| 方法 | 路徑 | 說明 |
+| --- | --- | --- |
+| GET | `/classes/` | 我教的與我加入的班級 |
+| POST | `/classes/` | `{name}` → 建立班級（建立者是老師），回傳 6 碼加入代碼 |
+| POST | `/classes/join/` | `{code}` → 加入班級（不分大小寫；限流同登入） |
+| GET | `/classes/{code}/` | 班內排行榜；老師另外會拿到 `report`（學生名單、各助詞正確率、最常答錯題目） |
+| DELETE | `/classes/{code}/` | 刪除班級（僅老師）→ 204 |
+| POST | `/classes/{code}/leave/` | 退出班級 → 204 |
+
+不是老師也不是成員的人查詢一律回 `404`。學生之間只看得到暱稱、等級與 EXP。
 
 ### 玩家資料
 
