@@ -113,6 +113,10 @@ else:
         }
     }
 
+# 連線保留一段時間重複使用。資料庫在遠端（託管服務）時，每個請求都重新連線與交握會多花好幾百毫秒到一兩秒
+DATABASES["default"]["CONN_MAX_AGE"] = int(env("DB_CONN_MAX_AGE", "300"))
+DATABASES["default"]["CONN_HEALTH_CHECKS"] = True
+
 AUTH_USER_MODEL = "accounts.User"
 AUTH_PASSWORD_VALIDATORS = [
     {"NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator"},

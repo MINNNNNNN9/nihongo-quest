@@ -20,6 +20,8 @@ WORKDIR /app
 COPY backend/requirements.txt ./
 RUN pip install -r requirements.txt
 COPY backend ./
+# 建置時就收集 admin／API 文件的靜態檔，啟動更快（這一步不會連資料庫，連線設定只是佔位）
+RUN DJANGO_SECRET_KEY=build-only DATABASE_URL=postgresql://build:build@localhost/build python manage.py collectstatic --noinput
 COPY --from=frontend /app/frontend/dist /usr/share/nginx/html
 COPY frontend/nginx.conf /etc/nginx/site.conf.template
 COPY deploy/render/start.sh /start.sh
