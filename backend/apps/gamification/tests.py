@@ -72,9 +72,19 @@ def test_exp_leaderboard_respects_privacy(client, game, user, make_user):
                 ], "me": None, "hidden": True,
             }
 
+    newcomer = make_user("saburo")  # 還沒有任何 EXP 的玩家也在榜上，排在最後
     board = client.get("/api/leaderboard/").json()["data"]
-    assert [e["display_name"] for e in board["entries"]] == ["jiro", "taro"]
+    assert [e["display_name"] for e in board["entries"]] == ["jiro", "taro", "saburo"]
     assert board["me"]["rank"] == 2 and board["me"]["value"] == 50
+    fresh = APIClient()
+    fresh.force_authenticate(newcomer)
+    assert fresh.get("/api/leaderboard/").json()["data"]["me"] == {
+        "rank": 3, "display_name": "saburo", "level": 1, "value": 0, "is_me": True,
+    }
+
+    levels = client.get("/api/leaderboard/?board=levels").json()["data"]
+    assert [(e["display_name"], e["value"]) for e in levels["entries"]] == [("jiro", 2), ("taro", 1), ("saburo", 0)]
+    assert levels["me"]["rank"] == 2
     # 不外洩帳號、email 或使用者 ID
     assert set(board["entries"][0]) == {"rank", "display_name", "level", "value", "is_me"}
 

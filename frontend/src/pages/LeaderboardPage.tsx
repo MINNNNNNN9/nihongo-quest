@@ -7,15 +7,16 @@ import { ErrorPanel, LoadingPanel, PageTitle } from '../components/ui';
 import { api } from '../lib/api';
 import type { Leaderboard, LeaderboardEntry } from '../lib/types';
 
-type Board = 'exp' | 'score';
+type Board = 'exp' | 'levels' | 'score';
 
 const BOARDS: { id: Board; label: string; unit: string; note: string }[] = [
-  { id: 'exp', label: '累積 EXP', unit: 'EXP', note: '所有遊戲累積的經驗值。' },
+  { id: 'exp', label: '累積 EXP', unit: 'EXP', note: '通關、錯題複習與每日任務累積的經驗值。還沒拿到 EXP 的冒險者也會列在後面。' },
+  { id: 'levels', label: '通過關卡', unit: '關', note: '通過的關卡數（全部 18 關，同一關重複通過只算一次）。' },
   {
     id: 'score',
-    label: '最高評價',
+    label: '全破評價',
     unit: '分',
-    note: '全破場次的最高總評價（答題評價由伺服器計算；戰鬥評價由遊戲端回報，僅供參考）。',
+    note: '只有把 18 關全部打完的場次才會上這個榜：全破場次的最高總評價（答題評價由伺服器計算；戰鬥評價由遊戲端回報，僅供參考）。',
   },
 ];
 
@@ -53,7 +54,7 @@ export function LeaderboardPage() {
     <div className="mx-auto max-w-2xl space-y-5">
       <PageTitle kana="えいゆうのいしぶみ">英雄榜</PageTitle>
 
-      <div role="tablist" aria-label="排行榜類型" className="flex gap-2">
+      <div role="tablist" aria-label="排行榜類型" className="flex flex-wrap gap-2">
         {BOARDS.map((b) => (
           <button
             key={b.id}
@@ -101,7 +102,7 @@ export function LeaderboardPage() {
               </ul>
             ) : (
               <p className="text-sm text-mist">
-                {board === 'exp' ? '通關任一關卡取得 EXP 後就會上榜。' : '全破一次遊戲後就會上榜。'}
+                {board === 'score' ? '全破一次遊戲（18 關）後就會上榜。' : '重新整理後就會看到自己的名次。'}
               </p>
             )}
           </section>

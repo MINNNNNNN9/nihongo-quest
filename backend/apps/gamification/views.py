@@ -62,12 +62,14 @@ class QuestClaimView(APIView):
 class LeaderboardView(APIView):
     @extend_schema(
         parameters=[
-            OpenApiParameter("board", str, enum=["exp", "score"], description="exp=累積 EXP、score=最高總評價"),
+            OpenApiParameter("board", str, enum=["exp", "levels", "score"], description="exp=累積 EXP、levels=通過關卡數、score=最高總評價"),
             OpenApiParameter("game", str, description="score 排行榜可指定遊戲 slug"),
         ],
         responses={200: dict},
     )
     def get(self, request):
+        if request.query_params.get("board") == "levels":
+            return Response(stats.levels_leaderboard(request.user))
         if request.query_params.get("board") == "score":
             return Response(stats.score_leaderboard(request.user, request.query_params.get("game")))
         return Response(stats.exp_leaderboard(request.user))

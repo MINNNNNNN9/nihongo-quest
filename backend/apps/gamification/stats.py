@@ -170,17 +170,40 @@ def _entry(rank: int, profile: PlayerProfile, value: int, me) -> dict:
 
 
 def exp_leaderboard(user) -> dict:
-    public = PlayerProfile.objects.filter(show_on_leaderboard=True, total_exp__gt=0)
+    # 還沒拿到 EXP 的玩家也列出來（排在後面）：剛開站或剛開班時，榜上才看得到彼此
+    public = PlayerProfile.objects.filter(show_on_leaderboard=True)
     top = public.order_by("-total_exp", "id")[:LEADERBOARD_SIZE]
     profile = _profile(user)
     me = None
-    if profile.show_on_leaderboard and profile.total_exp > 0:
+    if profile.show_on_leaderboard:
         ahead = public.filter(Q(total_exp__gt=profile.total_exp) | Q(total_exp=profile.total_exp, id__lt=profile.id))
         me = _entry(ahead.count() + 1, profile, profile.total_exp, user)
     return {
         "board": "exp",
         "entries": [_entry(i, p, p.total_exp, user) for i, p in enumerate(top, start=1)],
         "me": me,
+        "hidden": not profile.show_on_leaderboard,
+    }
+
+
+def levels_leaderboard(user) -> dict:
+    """通過的關卡數（同一關重複通過只算一次）；同數量時 EXP 高的在前。"""
+    cleared = Count(
+        "user__game_sessions__records__level",
+        filter=Q(user__game_sessions__records__completed_at__isnull=False),
+        distinct=True,
+    )
+    ranked = list(
+        PlayerProfile.objects.filter(show_on_leaderboard=True)
+        .annotate(cleared=cleared)
+        .order_by("-cleared", "-total_exp", "id")
+    )
+    profile = _profile(user)
+    position = next((i for i, p in enumerate(ranked, start=1) if p.pk == profile.pk), None)
+    return {
+        "board": "levels",
+        "entries": [_entry(i, p, p.cleared, user) for i, p in enumerate(ranked[:LEADERBOARD_SIZE], start=1)],
+        "me": _entry(position, ranked[position - 1], ranked[position - 1].cleared, user) if position else None,
         "hidden": not profile.show_on_leaderboard,
     }
 

@@ -128,7 +128,7 @@ export interface LeaderboardEntry {
 }
 
 export interface Leaderboard {
-  board: 'exp' | 'score';
+  board: 'exp' | 'levels' | 'score';
   entries: LeaderboardEntry[];
   me: LeaderboardEntry | null;
   hidden: boolean;

@@ -149,7 +149,8 @@
 
 | 方法 | 路徑 | 說明 |
 | --- | --- | --- |
-| GET | `/leaderboard/?board=exp` | 累積 EXP 前 20 名 + 我的名次 |
+| GET | `/leaderboard/?board=exp` | 累積 EXP 前 20 名 + 我的名次（還沒有 EXP 的玩家也會列出） |
+| GET | `/leaderboard/?board=levels` | 通過關卡數前 20 名 + 我的名次 |
 | GET | `/leaderboard/?board=score&game={slug}` | 全破場次最高總評價前 20 名 + 我的名次 |
 
 每筆只包含 `rank`、`display_name`、`level`、`value`、`is_me`。
