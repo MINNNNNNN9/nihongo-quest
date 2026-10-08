@@ -1,0 +1,1971 @@
+[
+ {
+  "key": "Q01",
+  "number": 1,
+  "context": "父はエンジニアです。",
+  "prompt": "私（？）エンジニアです。",
+  "hint_zh": "爸爸是工程師。 我也是工程師。",
+  "topic": "mo",
+  "correct_answer": "も",
+  "choices": [
+   {
+    "sprite": "(正解)mo",
+    "label": "も"
+   },
+   {
+    "sprite": "ga",
+    "label": "が"
+   },
+   {
+    "sprite": "wa",
+    "label": "は"
+   },
+   {
+    "sprite": "wo",
+    "label": "を"
+   }
+  ]
+ },
+ {
+  "key": "Q02",
+  "number": 2,
+  "context": "先生は台湾人です。",
+  "prompt": "学生たち（？）台湾人です。",
+  "hint_zh": "老師是台灣人。 學生們也是台灣人。",
+  "topic": "mo",
+  "correct_answer": "も",
+  "choices": [
+   {
+    "sprite": "(正解)mo",
+    "label": "も"
+   },
+   {
+    "sprite": "ga",
+    "label": "が"
+   },
+   {
+    "sprite": "wa",
+    "label": "は"
+   },
+   {
+    "sprite": "wo",
+    "label": "を"
+   }
+  ]
+ },
+ {
+  "key": "Q03",
+  "number": 3,
+  "context": "弟は学校へ行きます。",
+  "prompt": "妹（？）学校へ行きます。",
+  "hint_zh": "弟弟要去學校。 妹妹也要去學校。",
+  "topic": "mo",
+  "correct_answer": "も",
+  "choices": [
+   {
+    "sprite": "(正解)mo",
+    "label": "も"
+   },
+   {
+    "sprite": "ga",
+    "label": "が"
+   },
+   {
+    "sprite": "wa",
+    "label": "は"
+   },
+   {
+    "sprite": "wo",
+    "label": "を"
+   }
+  ]
+ },
+ {
+  "key": "Q04",
+  "number": 4,
+  "context": "土曜日は働きます。",
+  "prompt": "日曜日（？）働きます。",
+  "hint_zh": "星期六要工作。 星期日也要工作。",
+  "topic": "mo",
+  "correct_answer": "も",
+  "choices": [
+   {
+    "sprite": "(正解)mo",
+    "label": "も"
+   },
+   {
+    "sprite": "ga",
+    "label": "が"
+   },
+   {
+    "sprite": "wa",
+    "label": "は"
+   },
+   {
+    "sprite": "wo",
+    "label": "を"
+   }
+  ]
+ },
+ {
+  "key": "Q05",
+  "number": 5,
+  "context": "私は来月バスで新竹へ来ます。",
+  "prompt": "社長（？）バスで来ます。",
+  "hint_zh": "我下個月要搭巴士來新竹。 總經理也要搭巴士來。",
+  "topic": "mo",
+  "correct_answer": "も",
+  "choices": [
+   {
+    "sprite": "(正解)mo",
+    "label": "も"
+   },
+   {
+    "sprite": "ga",
+    "label": "が"
+   },
+   {
+    "sprite": "wa",
+    "label": "は"
+   },
+   {
+    "sprite": "wo",
+    "label": "を"
+   }
+  ]
+ },
+ {
+  "key": "Q06",
+  "number": 6,
+  "context": "ルームメイトは毎晩11時30分に寝ます。",
+  "prompt": "私（？）毎晩11時30分に寝ます。",
+  "hint_zh": "室友每天晚上11點30分睡覺。 我也每天晚上11點30分睡覺。",
+  "topic": "mo",
+  "correct_answer": "も",
+  "choices": [
+   {
+    "sprite": "(正解)mo",
+    "label": "も"
+   },
+   {
+    "sprite": "ga",
+    "label": "が"
+   },
+   {
+    "sprite": "wa",
+    "label": "は"
+   },
+   {
+    "sprite": "wo",
+    "label": "を"
+   }
+  ]
+ },
+ {
+  "key": "Q07",
+  "number": 7,
+  "context": "この靴はテレサちゃんのです。",
+  "prompt": "そのドレス（？）テレサちゃんのです。",
+  "hint_zh": "這雙鞋子是泰勒莎小妹妹的。 那件洋裝也是泰勒莎小妹妹的。",
+  "topic": "mo",
+  "correct_answer": "も",
+  "choices": [
+   {
+    "sprite": "(正解)mo",
+    "label": "も"
+   },
+   {
+    "sprite": "ga",
+    "label": "が"
+   },
+   {
+    "sprite": "wa",
+    "label": "は"
+   },
+   {
+    "sprite": "wo",
+    "label": "を"
+   }
+  ]
+ },
+ {
+  "key": "Q08",
+  "number": 8,
+  "context": "ここは教室です。",
+  "prompt": "そこ（？）教室です。",
+  "hint_zh": "這裡是教室。 那裡也是教室。",
+  "topic": "mo",
+  "correct_answer": "も",
+  "choices": [
+   {
+    "sprite": "(正解)mo",
+    "label": "も"
+   },
+   {
+    "sprite": "ga",
+    "label": "が"
+   },
+   {
+    "sprite": "wa",
+    "label": "は"
+   },
+   {
+    "sprite": "wo",
+    "label": "を"
+   }
+  ]
+ },
+ {
+  "key": "Q09",
+  "number": 9,
+  "context": "私は明日国へ帰ります。",
+  "prompt": "家族（？）国へ帰ります。",
+  "hint_zh": "我明天要回國。 家人也要回國。",
+  "topic": "mo",
+  "correct_answer": "も",
+  "choices": [
+   {
+    "sprite": "(正解)mo",
+    "label": "も"
+   },
+   {
+    "sprite": "ga",
+    "label": "が"
+   },
+   {
+    "sprite": "wa",
+    "label": "は"
+   },
+   {
+    "sprite": "wo",
+    "label": "を"
+   }
+  ]
+ },
+ {
+  "key": "Q10",
+  "number": 10,
+  "context": "今朝お母さんは6時に起きました。",
+  "prompt": "お父さん（？）6時に起きました。",
+  "hint_zh": "今天早上媽媽6點起床了。 爸爸也6點起床了。",
+  "topic": "mo",
+  "correct_answer": "も",
+  "choices": [
+   {
+    "sprite": "(正解)mo",
+    "label": "も"
+   },
+   {
+    "sprite": "ga",
+    "label": "が"
+   },
+   {
+    "sprite": "wa",
+    "label": "は"
+   },
+   {
+    "sprite": "wo",
+    "label": "を"
+   }
+  ]
+ },
+ {
+  "key": "Q11",
+  "number": 11,
+  "context": "台湾の銀行は9時から3時までです。",
+  "prompt": "日本の銀行（？）9時から3時までです。",
+  "hint_zh": "台灣的銀行從9點營業到3點。 日本的銀行也是從9點營業到3點。",
+  "topic": "mo",
+  "correct_answer": "も",
+  "choices": [
+   {
+    "sprite": "(正解)mo",
+    "label": "も"
+   },
+   {
+    "sprite": "ga",
+    "label": "が"
+   },
+   {
+    "sprite": "wa",
+    "label": "は"
+   },
+   {
+    "sprite": "wo",
+    "label": "を"
+   }
+  ]
+ },
+ {
+  "key": "Q12",
+  "number": 12,
+  "context": "陳さんは英語の先生です。",
+  "prompt": "柯さん（？）英語の先生です。",
+  "hint_zh": "陳小姐是英語老師。 柯先生也是英語老師。",
+  "topic": "mo",
+  "correct_answer": "も",
+  "choices": [
+   {
+    "sprite": "(正解)mo",
+    "label": "も"
+   },
+   {
+    "sprite": "ga",
+    "label": "が"
+   },
+   {
+    "sprite": "wa",
+    "label": "は"
+   },
+   {
+    "sprite": "wo",
+    "label": "を"
+   }
+  ]
+ },
+ {
+  "key": "Q13",
+  "number": 13,
+  "context": "これは3500円です。",
+  "prompt": "それ（？）3500円です。",
+  "hint_zh": "這個是3500元。 那個也是3500元。",
+  "topic": "mo",
+  "correct_answer": "も",
+  "choices": [
+   {
+    "sprite": "(正解)mo",
+    "label": "も"
+   },
+   {
+    "sprite": "ga",
+    "label": "が"
+   },
+   {
+    "sprite": "wa",
+    "label": "は"
+   },
+   {
+    "sprite": "wo",
+    "label": "を"
+   }
+  ]
+ },
+ {
+  "key": "Q14",
+  "number": 14,
+  "context": "友達の誕生日は1月5日です。",
+  "prompt": "私の誕生日（？）1月5日です。",
+  "hint_zh": "朋友的生日是1月5日。 我的生日也是1月5日。",
+  "topic": "mo",
+  "correct_answer": "も",
+  "choices": [
+   {
+    "sprite": "(正解)mo",
+    "label": "も"
+   },
+   {
+    "sprite": "ga",
+    "label": "が"
+   },
+   {
+    "sprite": "wa",
+    "label": "は"
+   },
+   {
+    "sprite": "wo",
+    "label": "を"
+   }
+  ]
+ },
+ {
+  "key": "Q15",
+  "number": 15,
+  "context": "",
+  "prompt": "明日どこへ（？）行きません。",
+  "hint_zh": "明天哪裡也不去。",
+  "topic": "mo",
+  "correct_answer": "も",
+  "choices": [
+   {
+    "sprite": "(正解)mo",
+    "label": "も"
+   },
+   {
+    "sprite": "ga",
+    "label": "が"
+   },
+   {
+    "sprite": "wa",
+    "label": "は"
+   },
+   {
+    "sprite": "wo",
+    "label": "を"
+   }
+  ]
+ },
+ {
+  "key": "Q16",
+  "number": 16,
+  "context": "",
+  "prompt": "お婆さんは何（？）買いません。",
+  "hint_zh": "奶奶什麼也不買。",
+  "topic": "mo",
+  "correct_answer": "も",
+  "choices": [
+   {
+    "sprite": "(正解)mo",
+    "label": "も"
+   },
+   {
+    "sprite": "ga",
+    "label": "が"
+   },
+   {
+    "sprite": "wa",
+    "label": "は"
+   },
+   {
+    "sprite": "wo",
+    "label": "を"
+   }
+  ]
+ },
+ {
+  "key": "Q17",
+  "number": 17,
+  "context": "",
+  "prompt": "昨日彼は何（？）しませんでした。",
+  "hint_zh": "昨天他什麼也沒有做。",
+  "topic": "mo",
+  "correct_answer": "も",
+  "choices": [
+   {
+    "sprite": "(正解)mo",
+    "label": "も"
+   },
+   {
+    "sprite": "ga",
+    "label": "が"
+   },
+   {
+    "sprite": "wa",
+    "label": "は"
+   },
+   {
+    "sprite": "wo",
+    "label": "を"
+   }
+  ]
+ },
+ {
+  "key": "Q18",
+  "number": 18,
+  "context": "",
+  "prompt": "今朝何（？）食べませんでした。",
+  "hint_zh": "今天早上什麼都沒有吃。",
+  "topic": "mo",
+  "correct_answer": "も",
+  "choices": [
+   {
+    "sprite": "(正解)mo",
+    "label": "も"
+   },
+   {
+    "sprite": "ga",
+    "label": "が"
+   },
+   {
+    "sprite": "wa",
+    "label": "は"
+   },
+   {
+    "sprite": "wo",
+    "label": "を"
+   }
+  ]
+ },
+ {
+  "key": "Q19",
+  "number": 19,
+  "context": "",
+  "prompt": "私は何（？）知りません。",
+  "hint_zh": "我什麼都不知道。",
+  "topic": "mo",
+  "correct_answer": "も",
+  "choices": [
+   {
+    "sprite": "(正解)mo",
+    "label": "も"
+   },
+   {
+    "sprite": "ga",
+    "label": "が"
+   },
+   {
+    "sprite": "wa",
+    "label": "は"
+   },
+   {
+    "sprite": "wo",
+    "label": "を"
+   }
+  ]
+ },
+ {
+  "key": "Q20",
+  "number": 20,
+  "context": "",
+  "prompt": "おとといどこ（？）行きませんでした。",
+  "hint_zh": "前天哪裡也沒去。",
+  "topic": "mo",
+  "correct_answer": "も",
+  "choices": [
+   {
+    "sprite": "(正解)mo",
+    "label": "も"
+   },
+   {
+    "sprite": "ga",
+    "label": "が"
+   },
+   {
+    "sprite": "wa",
+    "label": "は"
+   },
+   {
+    "sprite": "wo",
+    "label": "を"
+   }
+  ]
+ },
+ {
+  "key": "Q21",
+  "number": 21,
+  "context": "",
+  "prompt": "友達は何（？）飲みません。",
+  "hint_zh": "朋友什麼都不喝。",
+  "topic": "mo",
+  "correct_answer": "も",
+  "choices": [
+   {
+    "sprite": "(正解)mo",
+    "label": "も"
+   },
+   {
+    "sprite": "ga",
+    "label": "が"
+   },
+   {
+    "sprite": "wa",
+    "label": "は"
+   },
+   {
+    "sprite": "wo",
+    "label": "を"
+   }
+  ]
+ },
+ {
+  "key": "Q22",
+  "number": 22,
+  "context": "",
+  "prompt": "うちの子供は何（？）聞きません。",
+  "hint_zh": "家裡的小朋友什麼都不聽。",
+  "topic": "mo",
+  "correct_answer": "も",
+  "choices": [
+   {
+    "sprite": "(正解)mo",
+    "label": "も"
+   },
+   {
+    "sprite": "ga",
+    "label": "が"
+   },
+   {
+    "sprite": "wa",
+    "label": "は"
+   },
+   {
+    "sprite": "wo",
+    "label": "を"
+   }
+  ]
+ },
+ {
+  "key": "Q23",
+  "number": 23,
+  "context": "",
+  "prompt": "学生たちは何（？）勉強しませんでした。",
+  "hint_zh": "學生們什麼也都不學習。",
+  "topic": "mo",
+  "correct_answer": "も",
+  "choices": [
+   {
+    "sprite": "(正解)mo",
+    "label": "も"
+   },
+   {
+    "sprite": "ga",
+    "label": "が"
+   },
+   {
+    "sprite": "wa",
+    "label": "は"
+   },
+   {
+    "sprite": "wo",
+    "label": "を"
+   }
+  ]
+ },
+ {
+  "key": "Q24",
+  "number": 24,
+  "context": "",
+  "prompt": "教室は誰（？）いません。",
+  "hint_zh": "教室裡都沒有人在。",
+  "topic": "mo",
+  "correct_answer": "も",
+  "choices": [
+   {
+    "sprite": "(正解)mo",
+    "label": "も"
+   },
+   {
+    "sprite": "ga",
+    "label": "が"
+   },
+   {
+    "sprite": "wa",
+    "label": "は"
+   },
+   {
+    "sprite": "wo",
+    "label": "を"
+   }
+  ]
+ },
+ {
+  "key": "Q25",
+  "number": 25,
+  "context": "",
+  "prompt": "私は毎日8時（？）5時（？）勉強します。",
+  "hint_zh": "我每天從8點到5點學習。",
+  "topic": "karamade",
+  "correct_answer": "から／まで",
+  "choices": [
+   {
+    "sprite": "(正解)karamade",
+    "label": "から／まで"
+   },
+   {
+    "sprite": "gani",
+    "label": "が／に"
+   }
+  ]
+ },
+ {
+  "key": "Q26",
+  "number": 26,
+  "context": "",
+  "prompt": "昼休みは12時半（？）1時15分（？）です。",
+  "hint_zh": "午休是從12點半到1點15分。",
+  "topic": "karamade",
+  "correct_answer": "から／まで",
+  "choices": [
+   {
+    "sprite": "(正解)karamade",
+    "label": "から／まで"
+   },
+   {
+    "sprite": "gani",
+    "label": "が／に"
+   }
+  ]
+ },
+ {
+  "key": "Q27",
+  "number": 27,
+  "context": "",
+  "prompt": "9時（？）12時（？）アルバイトをします。",
+  "hint_zh": "從9點到12點打工。",
+  "topic": "karamade",
+  "correct_answer": "から／まで",
+  "choices": [
+   {
+    "sprite": "(正解)karamade",
+    "label": "から／まで"
+   },
+   {
+    "sprite": "gani",
+    "label": "が／に"
+   }
+  ]
+ },
+ {
+  "key": "Q28",
+  "number": 28,
+  "context": "",
+  "prompt": "市役所は8時（？）2時（？）です。",
+  "hint_zh": "市公所從8點開始到2點結束。",
+  "topic": "karamade",
+  "correct_answer": "から／まで",
+  "choices": [
+   {
+    "sprite": "(正解)karamade",
+    "label": "から／まで"
+   },
+   {
+    "sprite": "gani",
+    "label": "が／に"
+   }
+  ]
+ },
+ {
+  "key": "Q29",
+  "number": 29,
+  "context": "",
+  "prompt": "お父さんは月曜日（？）金曜日（？）働きます。",
+  "hint_zh": "爸爸從星期一到星期五工作。",
+  "topic": "karamade",
+  "correct_answer": "から／まで",
+  "choices": [
+   {
+    "sprite": "(正解)karamade",
+    "label": "から／まで"
+   },
+   {
+    "sprite": "gani",
+    "label": "が／に"
+   }
+  ]
+ },
+ {
+  "key": "Q30",
+  "number": 30,
+  "context": "",
+  "prompt": "郵便局は何時（？）何時（？）ですか。",
+  "hint_zh": "郵局從幾點開始到幾點結束呢？",
+  "topic": "karamade",
+  "correct_answer": "から／まで",
+  "choices": [
+   {
+    "sprite": "(正解)karamade",
+    "label": "から／まで"
+   },
+   {
+    "sprite": "gani",
+    "label": "が／に"
+   }
+  ]
+ },
+ {
+  "key": "Q31",
+  "number": 31,
+  "context": "",
+  "prompt": "全聯スーパーは8時（？）23時（？）です。",
+  "hint_zh": "全聯超市從8點開始到23點結束。",
+  "topic": "karamade",
+  "correct_answer": "から／まで",
+  "choices": [
+   {
+    "sprite": "(正解)karamade",
+    "label": "から／まで"
+   },
+   {
+    "sprite": "gani",
+    "label": "が／に"
+   }
+  ]
+ },
+ {
+  "key": "Q32",
+  "number": 32,
+  "context": "",
+  "prompt": "日本文化祭はいつ（？）ですか。",
+  "hint_zh": "日本文化祭從什麼時候開始呢？",
+  "topic": "kara",
+  "correct_answer": "から",
+  "choices": [
+   {
+    "sprite": "(正解)kara",
+    "label": "から"
+   },
+   {
+    "sprite": "ga",
+    "label": "が"
+   },
+   {
+    "sprite": "made",
+    "label": "まで"
+   },
+   {
+    "sprite": "ni",
+    "label": "に"
+   }
+  ]
+ },
+ {
+  "key": "Q33",
+  "number": 33,
+  "context": "",
+  "prompt": "英語の授業は午後1時（？）です。",
+  "hint_zh": "英文課從下午1點開始。",
+  "topic": "kara",
+  "correct_answer": "から",
+  "choices": [
+   {
+    "sprite": "(正解)kara",
+    "label": "から"
+   },
+   {
+    "sprite": "ga",
+    "label": "が"
+   },
+   {
+    "sprite": "made",
+    "label": "まで"
+   },
+   {
+    "sprite": "ni",
+    "label": "に"
+   }
+  ]
+ },
+ {
+  "key": "Q34",
+  "number": 34,
+  "context": "",
+  "prompt": "日本語能力試験は12月（？）です。",
+  "hint_zh": "日語能力檢定從12月開始。",
+  "topic": "kara",
+  "correct_answer": "から",
+  "choices": [
+   {
+    "sprite": "(正解)kara",
+    "label": "から"
+   },
+   {
+    "sprite": "ga",
+    "label": "が"
+   },
+   {
+    "sprite": "made",
+    "label": "まで"
+   },
+   {
+    "sprite": "ni",
+    "label": "に"
+   }
+  ]
+ },
+ {
+  "key": "Q35",
+  "number": 35,
+  "context": "",
+  "prompt": "元智大学の中間試験はいつ（？）ですか。",
+  "hint_zh": "元智大學的期中考從什麼時候開始呢？",
+  "topic": "kara",
+  "correct_answer": "から",
+  "choices": [
+   {
+    "sprite": "(正解)kara",
+    "label": "から"
+   },
+   {
+    "sprite": "ga",
+    "label": "が"
+   },
+   {
+    "sprite": "made",
+    "label": "まで"
+   },
+   {
+    "sprite": "ni",
+    "label": "に"
+   }
+  ]
+ },
+ {
+  "key": "Q36",
+  "number": 36,
+  "context": "",
+  "prompt": "夜10時から朝6時（？）ずっと寝ます。",
+  "hint_zh": "從晚上10點開始一直睡到早上6點。",
+  "topic": "made",
+  "correct_answer": "まで",
+  "choices": [
+   {
+    "sprite": "(正解)made2",
+    "label": "まで"
+   },
+   {
+    "sprite": "ga",
+    "label": "が"
+   },
+   {
+    "sprite": "kara2",
+    "label": "から"
+   },
+   {
+    "sprite": "ni2",
+    "label": "に"
+   }
+  ]
+ },
+ {
+  "key": "Q37",
+  "number": 37,
+  "context": "",
+  "prompt": "今日の会議は午後4時（？）ですよ。",
+  "hint_zh": "今天的會議到下午4點結束喔。",
+  "topic": "made",
+  "correct_answer": "まで",
+  "choices": [
+   {
+    "sprite": "(正解)made2",
+    "label": "まで"
+   },
+   {
+    "sprite": "ga",
+    "label": "が"
+   },
+   {
+    "sprite": "kara2",
+    "label": "から"
+   },
+   {
+    "sprite": "ni2",
+    "label": "に"
+   }
+  ]
+ },
+ {
+  "key": "Q38",
+  "number": 38,
+  "context": "",
+  "prompt": "昨日何時（？）寝ましたか。",
+  "hint_zh": "昨天睡到幾點呢？",
+  "topic": "made",
+  "correct_answer": "まで",
+  "choices": [
+   {
+    "sprite": "(正解)made2",
+    "label": "まで"
+   },
+   {
+    "sprite": "ga",
+    "label": "が"
+   },
+   {
+    "sprite": "kara2",
+    "label": "から"
+   },
+   {
+    "sprite": "ni2",
+    "label": "に"
+   }
+  ]
+ },
+ {
+  "key": "Q39",
+  "number": 39,
+  "context": "",
+  "prompt": "昨日11時（？）働きました。",
+  "hint_zh": "昨天工作到11點。",
+  "topic": "made",
+  "correct_answer": "まで",
+  "choices": [
+   {
+    "sprite": "(正解)made2",
+    "label": "まで"
+   },
+   {
+    "sprite": "ga",
+    "label": "が"
+   },
+   {
+    "sprite": "kara2",
+    "label": "から"
+   },
+   {
+    "sprite": "ni2",
+    "label": "に"
+   }
+  ]
+ },
+ {
+  "key": "Q40",
+  "number": 40,
+  "context": "",
+  "prompt": "毎日7時30分（？）起きます。",
+  "hint_zh": "每天7點30分起床。",
+  "topic": "ni",
+  "correct_answer": "に",
+  "choices": [
+   {
+    "sprite": "(正解)ni3",
+    "label": "に"
+   },
+   {
+    "sprite": "X",
+    "label": "✕（不需要助詞）"
+   },
+   {
+    "sprite": "de",
+    "label": "で"
+   },
+   {
+    "sprite": "ga",
+    "label": "が"
+   }
+  ]
+ },
+ {
+  "key": "Q41",
+  "number": 41,
+  "context": "",
+  "prompt": "毎晩何時（？）寝ますか。",
+  "hint_zh": "每天晚上幾點睡覺呢？",
+  "topic": "ni",
+  "correct_answer": "に",
+  "choices": [
+   {
+    "sprite": "(正解)ni3",
+    "label": "に"
+   },
+   {
+    "sprite": "X",
+    "label": "✕（不需要助詞）"
+   },
+   {
+    "sprite": "de",
+    "label": "で"
+   },
+   {
+    "sprite": "ga",
+    "label": "が"
+   }
+  ]
+ },
+ {
+  "key": "Q42",
+  "number": 42,
+  "context": "",
+  "prompt": "私は2002年（？）生まれました。",
+  "hint_zh": "我在2002年出生。",
+  "topic": "ni",
+  "correct_answer": "に",
+  "choices": [
+   {
+    "sprite": "(正解)ni3",
+    "label": "に"
+   },
+   {
+    "sprite": "X",
+    "label": "✕（不需要助詞）"
+   },
+   {
+    "sprite": "de",
+    "label": "で"
+   },
+   {
+    "sprite": "ga",
+    "label": "が"
+   }
+  ]
+ },
+ {
+  "key": "Q43",
+  "number": 43,
+  "context": "",
+  "prompt": "中間試験は金曜日（？）終わります。",
+  "hint_zh": "期中考在星期五結束。",
+  "topic": "ni",
+  "correct_answer": "に",
+  "choices": [
+   {
+    "sprite": "(正解)ni3",
+    "label": "に"
+   },
+   {
+    "sprite": "X",
+    "label": "✕（不需要助詞）"
+   },
+   {
+    "sprite": "de",
+    "label": "で"
+   },
+   {
+    "sprite": "ga",
+    "label": "が"
+   }
+  ]
+ },
+ {
+  "key": "Q44",
+  "number": 44,
+  "context": "",
+  "prompt": "5月14日（？）ブラジルへ来ました。",
+  "hint_zh": "在5月14日來到了巴西。",
+  "topic": "ni",
+  "correct_answer": "に",
+  "choices": [
+   {
+    "sprite": "(正解)ni3",
+    "label": "に"
+   },
+   {
+    "sprite": "X",
+    "label": "✕（不需要助詞）"
+   },
+   {
+    "sprite": "de",
+    "label": "で"
+   },
+   {
+    "sprite": "ga",
+    "label": "が"
+   }
+  ]
+ },
+ {
+  "key": "Q45",
+  "number": 45,
+  "context": "",
+  "prompt": "大学の授業は午後5時（？）終わります。",
+  "hint_zh": "大學的課在下午5點結束。",
+  "topic": "ni",
+  "correct_answer": "に",
+  "choices": [
+   {
+    "sprite": "(正解)ni3",
+    "label": "に"
+   },
+   {
+    "sprite": "X",
+    "label": "✕（不需要助詞）"
+   },
+   {
+    "sprite": "de",
+    "label": "で"
+   },
+   {
+    "sprite": "ga",
+    "label": "が"
+   }
+  ]
+ },
+ {
+  "key": "Q46",
+  "number": 46,
+  "context": "",
+  "prompt": "夜12時（？）寝ます。",
+  "hint_zh": "晚上12點睡覺。",
+  "topic": "ni",
+  "correct_answer": "に",
+  "choices": [
+   {
+    "sprite": "(正解)ni3",
+    "label": "に"
+   },
+   {
+    "sprite": "X",
+    "label": "✕（不需要助詞）"
+   },
+   {
+    "sprite": "de",
+    "label": "で"
+   },
+   {
+    "sprite": "ga",
+    "label": "が"
+   }
+  ]
+ },
+ {
+  "key": "Q47",
+  "number": 47,
+  "context": "",
+  "prompt": "昨日（？）勉強しました。",
+  "hint_zh": "昨天學習過了。",
+  "topic": "none",
+  "correct_answer": "✕（不需要助詞）",
+  "choices": [
+   {
+    "sprite": "(正解)X2",
+    "label": "✕（不需要助詞）"
+   },
+   {
+    "sprite": "de2",
+    "label": "で"
+   },
+   {
+    "sprite": "ga",
+    "label": "が"
+   },
+   {
+    "sprite": "ni4",
+    "label": "に"
+   }
+  ]
+ },
+ {
+  "key": "Q48",
+  "number": 48,
+  "context": "",
+  "prompt": "明日（？）朝8時に出発します。",
+  "hint_zh": "明天早上8點出發。",
+  "topic": "none",
+  "correct_answer": "✕（不需要助詞）",
+  "choices": [
+   {
+    "sprite": "(正解)X2",
+    "label": "✕（不需要助詞）"
+   },
+   {
+    "sprite": "de2",
+    "label": "で"
+   },
+   {
+    "sprite": "ga",
+    "label": "が"
+   },
+   {
+    "sprite": "ni4",
+    "label": "に"
+   }
+  ]
+ },
+ {
+  "key": "Q49",
+  "number": 49,
+  "context": "",
+  "prompt": "去年（？）家族と日本へ帰りました。",
+  "hint_zh": "去年和家人回了日本。",
+  "topic": "none",
+  "correct_answer": "✕（不需要助詞）",
+  "choices": [
+   {
+    "sprite": "(正解)X2",
+    "label": "✕（不需要助詞）"
+   },
+   {
+    "sprite": "de2",
+    "label": "で"
+   },
+   {
+    "sprite": "ga",
+    "label": "が"
+   },
+   {
+    "sprite": "ni4",
+    "label": "に"
+   }
+  ]
+ },
+ {
+  "key": "Q50",
+  "number": 50,
+  "context": "",
+  "prompt": "私は来週（？）友達と花蓮へ行きます。",
+  "hint_zh": " 我下週要和朋友去花蓮。",
+  "topic": "none",
+  "correct_answer": "✕（不需要助詞）",
+  "choices": [
+   {
+    "sprite": "(正解)X2",
+    "label": "✕（不需要助詞）"
+   },
+   {
+    "sprite": "de2",
+    "label": "で"
+   },
+   {
+    "sprite": "ga",
+    "label": "が"
+   },
+   {
+    "sprite": "ni4",
+    "label": "に"
+   }
+  ]
+ },
+ {
+  "key": "Q51",
+  "number": 51,
+  "context": "",
+  "prompt": "コンビニ（？）買い物します。",
+  "hint_zh": "在便利商店買東西。",
+  "topic": "de",
+  "correct_answer": "で",
+  "choices": [
+   {
+    "sprite": "(正解)de3",
+    "label": "で"
+   },
+   {
+    "sprite": "X3",
+    "label": "✕（不需要助詞）"
+   },
+   {
+    "sprite": "wa",
+    "label": "は"
+   },
+   {
+    "sprite": "wo",
+    "label": "を"
+   }
+  ]
+ },
+ {
+  "key": "Q52",
+  "number": 52,
+  "context": "",
+  "prompt": "部屋（？）寝ます。",
+  "hint_zh": "在房間睡覺。",
+  "topic": "de",
+  "correct_answer": "で",
+  "choices": [
+   {
+    "sprite": "(正解)de3",
+    "label": "で"
+   },
+   {
+    "sprite": "X3",
+    "label": "✕（不需要助詞）"
+   },
+   {
+    "sprite": "wa",
+    "label": "は"
+   },
+   {
+    "sprite": "wo",
+    "label": "を"
+   }
+  ]
+ },
+ {
+  "key": "Q53",
+  "number": 53,
+  "context": "",
+  "prompt": "大学（？）タイ語を勉強しました。",
+  "hint_zh": "在大學學習過泰語。",
+  "topic": "de",
+  "correct_answer": "で",
+  "choices": [
+   {
+    "sprite": "(正解)de3",
+    "label": "で"
+   },
+   {
+    "sprite": "X3",
+    "label": "✕（不需要助詞）"
+   },
+   {
+    "sprite": "wa",
+    "label": "は"
+   },
+   {
+    "sprite": "wo",
+    "label": "を"
+   }
+  ]
+ },
+ {
+  "key": "Q54",
+  "number": 54,
+  "context": "",
+  "prompt": "台湾（？）地震が起きました。",
+  "hint_zh": "在台灣發生了地震。",
+  "topic": "de",
+  "correct_answer": "で",
+  "choices": [
+   {
+    "sprite": "(正解)de3",
+    "label": "で"
+   },
+   {
+    "sprite": "X3",
+    "label": "✕（不需要助詞）"
+   },
+   {
+    "sprite": "wa",
+    "label": "は"
+   },
+   {
+    "sprite": "wo",
+    "label": "を"
+   }
+  ]
+ },
+ {
+  "key": "Q55",
+  "number": 55,
+  "context": "",
+  "prompt": "スーパー（？）アルバイトをします。",
+  "hint_zh": "在超市打工。",
+  "topic": "de",
+  "correct_answer": "で",
+  "choices": [
+   {
+    "sprite": "(正解)de3",
+    "label": "で"
+   },
+   {
+    "sprite": "X3",
+    "label": "✕（不需要助詞）"
+   },
+   {
+    "sprite": "wa",
+    "label": "は"
+   },
+   {
+    "sprite": "wo",
+    "label": "を"
+   }
+  ]
+ },
+ {
+  "key": "Q56",
+  "number": 56,
+  "context": "",
+  "prompt": "私は妹（？）漫画をあげます。",
+  "hint_zh": "我給妹妹漫畫。",
+  "topic": "ni",
+  "correct_answer": "に",
+  "choices": [
+   {
+    "sprite": "(正解)ni3",
+    "label": "に"
+   },
+   {
+    "sprite": "X",
+    "label": "✕（不需要助詞）"
+   },
+   {
+    "sprite": "de",
+    "label": "で"
+   },
+   {
+    "sprite": "ga",
+    "label": "が"
+   }
+  ]
+ },
+ {
+  "key": "Q57",
+  "number": 57,
+  "context": "",
+  "prompt": "私はクラスメート（？）消しゴムを貸します。",
+  "hint_zh": "我借橡皮擦給同學。",
+  "topic": "ni",
+  "correct_answer": "に",
+  "choices": [
+   {
+    "sprite": "(正解)ni3",
+    "label": "に"
+   },
+   {
+    "sprite": "X",
+    "label": "✕（不需要助詞）"
+   },
+   {
+    "sprite": "de",
+    "label": "で"
+   },
+   {
+    "sprite": "ga",
+    "label": "が"
+   }
+  ]
+ },
+ {
+  "key": "Q58",
+  "number": 58,
+  "context": "",
+  "prompt": "私は先生（？）レポートを送ります。",
+  "hint_zh": "我寄報告給老師。",
+  "topic": "ni",
+  "correct_answer": "に",
+  "choices": [
+   {
+    "sprite": "(正解)ni3",
+    "label": "に"
+   },
+   {
+    "sprite": "X",
+    "label": "✕（不需要助詞）"
+   },
+   {
+    "sprite": "de",
+    "label": "で"
+   },
+   {
+    "sprite": "ga",
+    "label": "が"
+   }
+  ]
+ },
+ {
+  "key": "Q59",
+  "number": 59,
+  "context": "",
+  "prompt": "私は社長（？）お土産をもらいます。",
+  "hint_zh": "我從總經理那得到伴手禮。",
+  "topic": "kara",
+  "correct_answer": "から",
+  "choices": [
+   {
+    "sprite": "(正解)kara3",
+    "label": "から"
+   },
+   {
+    "sprite": "ga",
+    "label": "が"
+   },
+   {
+    "sprite": "made3",
+    "label": "まで"
+   },
+   {
+    "sprite": "mo2",
+    "label": "も"
+   }
+  ]
+ },
+ {
+  "key": "Q60",
+  "number": 60,
+  "context": "",
+  "prompt": "私は李さん（？）お金を借ります。",
+  "hint_zh": "我向李先生借錢。",
+  "topic": "kara",
+  "correct_answer": "から",
+  "choices": [
+   {
+    "sprite": "(正解)kara3",
+    "label": "から"
+   },
+   {
+    "sprite": "ga",
+    "label": "が"
+   },
+   {
+    "sprite": "made3",
+    "label": "まで"
+   },
+   {
+    "sprite": "mo2",
+    "label": "も"
+   }
+  ]
+ },
+ {
+  "key": "Q61",
+  "number": 61,
+  "context": "",
+  "prompt": "猫は椅子の下（？）います。",
+  "hint_zh": "貓在椅子的下面。",
+  "topic": "ni",
+  "correct_answer": "に",
+  "choices": [
+   {
+    "sprite": "(正解)ni3",
+    "label": "に"
+   },
+   {
+    "sprite": "X",
+    "label": "✕（不需要助詞）"
+   },
+   {
+    "sprite": "de",
+    "label": "で"
+   },
+   {
+    "sprite": "ga",
+    "label": "が"
+   }
+  ]
+ },
+ {
+  "key": "Q62",
+  "number": 62,
+  "context": "",
+  "prompt": "家（？）犬がいます。",
+  "hint_zh": "家裡有狗。",
+  "topic": "ni",
+  "correct_answer": "に",
+  "choices": [
+   {
+    "sprite": "(正解)ni3",
+    "label": "に"
+   },
+   {
+    "sprite": "X",
+    "label": "✕（不需要助詞）"
+   },
+   {
+    "sprite": "de",
+    "label": "で"
+   },
+   {
+    "sprite": "ga",
+    "label": "が"
+   }
+  ]
+ },
+ {
+  "key": "Q63",
+  "number": 63,
+  "context": "",
+  "prompt": "ジム（？）何人いますか。",
+  "hint_zh": "健身房有幾個人？",
+  "topic": "ni",
+  "correct_answer": "に",
+  "choices": [
+   {
+    "sprite": "(正解)ni3",
+    "label": "に"
+   },
+   {
+    "sprite": "X",
+    "label": "✕（不需要助詞）"
+   },
+   {
+    "sprite": "de",
+    "label": "で"
+   },
+   {
+    "sprite": "ga",
+    "label": "が"
+   }
+  ]
+ },
+ {
+  "key": "Q64",
+  "number": 64,
+  "context": "",
+  "prompt": "家族はニューヨーク（？）います。",
+  "hint_zh": "家人在紐約。",
+  "topic": "ni",
+  "correct_answer": "に",
+  "choices": [
+   {
+    "sprite": "(正解)ni3",
+    "label": "に"
+   },
+   {
+    "sprite": "X",
+    "label": "✕（不需要助詞）"
+   },
+   {
+    "sprite": "de",
+    "label": "で"
+   },
+   {
+    "sprite": "ga",
+    "label": "が"
+   }
+  ]
+ },
+ {
+  "key": "Q65",
+  "number": 65,
+  "context": "",
+  "prompt": "今先生はどこ（？）いますか。",
+  "hint_zh": "老師現在在哪裡？",
+  "topic": "ni",
+  "correct_answer": "に",
+  "choices": [
+   {
+    "sprite": "(正解)ni3",
+    "label": "に"
+   },
+   {
+    "sprite": "X",
+    "label": "✕（不需要助詞）"
+   },
+   {
+    "sprite": "de",
+    "label": "で"
+   },
+   {
+    "sprite": "ga",
+    "label": "が"
+   }
+  ]
+ },
+ {
+  "key": "Q66",
+  "number": 66,
+  "context": "",
+  "prompt": "家族（？）台湾にいます。",
+  "hint_zh": "家人在台灣。",
+  "topic": "wa",
+  "correct_answer": "は",
+  "choices": [
+   {
+    "sprite": "(正解)wa2",
+    "label": "は"
+   },
+   {
+    "sprite": "ga",
+    "label": "が"
+   },
+   {
+    "sprite": "mo3",
+    "label": "も"
+   },
+   {
+    "sprite": "wo",
+    "label": "を"
+   }
+  ]
+ },
+ {
+  "key": "Q67",
+  "number": 67,
+  "context": "",
+  "prompt": "郵便局（？）銀行の前にあります。",
+  "hint_zh": "郵局在銀行的前面。",
+  "topic": "wa",
+  "correct_answer": "は",
+  "choices": [
+   {
+    "sprite": "(正解)wa2",
+    "label": "は"
+   },
+   {
+    "sprite": "ga",
+    "label": "が"
+   },
+   {
+    "sprite": "mo3",
+    "label": "も"
+   },
+   {
+    "sprite": "wo",
+    "label": "を"
+   }
+  ]
+ },
+ {
+  "key": "Q68",
+  "number": 68,
+  "context": "",
+  "prompt": "スーパー（？）高いビルの隣にあります。",
+  "hint_zh": "超市在高樓的隔壁。",
+  "topic": "wa",
+  "correct_answer": "は",
+  "choices": [
+   {
+    "sprite": "(正解)wa2",
+    "label": "は"
+   },
+   {
+    "sprite": "ga",
+    "label": "が"
+   },
+   {
+    "sprite": "mo3",
+    "label": "も"
+   },
+   {
+    "sprite": "wo",
+    "label": "を"
+   }
+  ]
+ },
+ {
+  "key": "Q69",
+  "number": 69,
+  "context": "",
+  "prompt": "赤ちゃん（？）病院にいます。",
+  "hint_zh": "嬰兒在醫院。",
+  "topic": "wa",
+  "correct_answer": "は",
+  "choices": [
+   {
+    "sprite": "(正解)wa2",
+    "label": "は"
+   },
+   {
+    "sprite": "ga",
+    "label": "が"
+   },
+   {
+    "sprite": "mo3",
+    "label": "も"
+   },
+   {
+    "sprite": "wo",
+    "label": "を"
+   }
+  ]
+ },
+ {
+  "key": "Q70",
+  "number": 70,
+  "context": "",
+  "prompt": "私（？）日本に１年にいました。",
+  "hint_zh": "我在日本待了一年。",
+  "topic": "wa",
+  "correct_answer": "は",
+  "choices": [
+   {
+    "sprite": "(正解)wa2",
+    "label": "は"
+   },
+   {
+    "sprite": "ga",
+    "label": "が"
+   },
+   {
+    "sprite": "mo3",
+    "label": "も"
+   },
+   {
+    "sprite": "wo",
+    "label": "を"
+   }
+  ]
+ },
+ {
+  "key": "Q71",
+  "number": 71,
+  "context": "",
+  "prompt": "あそこに男の子（？）います。",
+  "hint_zh": "那裡有男孩在。",
+  "topic": "ga",
+  "correct_answer": "が",
+  "choices": [
+   {
+    "sprite": "(正解)ga2",
+    "label": "が"
+   },
+   {
+    "sprite": "mo3",
+    "label": "も"
+   },
+   {
+    "sprite": "wa",
+    "label": "は"
+   },
+   {
+    "sprite": "wo",
+    "label": "を"
+   }
+  ]
+ },
+ {
+  "key": "Q72",
+  "number": 72,
+  "context": "",
+  "prompt": "机の上に写真（？）あります。",
+  "hint_zh": "桌上有照片。",
+  "topic": "ga",
+  "correct_answer": "が",
+  "choices": [
+   {
+    "sprite": "(正解)ga2",
+    "label": "が"
+   },
+   {
+    "sprite": "mo3",
+    "label": "も"
+   },
+   {
+    "sprite": "wa",
+    "label": "は"
+   },
+   {
+    "sprite": "wo",
+    "label": "を"
+   }
+  ]
+ },
+ {
+  "key": "Q73",
+  "number": 73,
+  "context": "",
+  "prompt": "冷蔵庫の中にいろいろな物（？）あります。",
+  "hint_zh": "冰箱裡有各式各樣的東西。",
+  "topic": "ga",
+  "correct_answer": "が",
+  "choices": [
+   {
+    "sprite": "(正解)ga2",
+    "label": "が"
+   },
+   {
+    "sprite": "mo3",
+    "label": "も"
+   },
+   {
+    "sprite": "wa",
+    "label": "は"
+   },
+   {
+    "sprite": "wo",
+    "label": "を"
+   }
+  ]
+ },
+ {
+  "key": "Q74",
+  "number": 74,
+  "context": "",
+  "prompt": "窓の右に何（？）ありますか。",
+  "hint_zh": "窗戶的右邊有什麼？",
+  "topic": "ga",
+  "correct_answer": "が",
+  "choices": [
+   {
+    "sprite": "(正解)ga2",
+    "label": "が"
+   },
+   {
+    "sprite": "mo3",
+    "label": "も"
+   },
+   {
+    "sprite": "wa",
+    "label": "は"
+   },
+   {
+    "sprite": "wo",
+    "label": "を"
+   }
+  ]
+ },
+ {
+  "key": "Q75",
+  "number": 75,
+  "context": "",
+  "prompt": "駅の近くにコンビニやスーパーなど（？）あります。",
+  "hint_zh": "車站附近有便利商店和超市等等。",
+  "topic": "ga",
+  "correct_answer": "が",
+  "choices": [
+   {
+    "sprite": "(正解)ga2",
+    "label": "が"
+   },
+   {
+    "sprite": "mo3",
+    "label": "も"
+   },
+   {
+    "sprite": "wa",
+    "label": "は"
+   },
+   {
+    "sprite": "wo",
+    "label": "を"
+   }
+  ]
+ }
+]

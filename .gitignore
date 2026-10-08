@@ -1,0 +1,13 @@
+.env
+node_modules/
+dist/
+__pycache__/
+*.pyc
+.pytest_cache/
+staticfiles/
+.DS_Store
+*.log
+coverage/
+# 由 scripts/sync-game-assets.mjs 從 scratch-games/ 與 node_modules 複製產生
+frontend/public/games/*/project.sb3
+frontend/public/player/scaffolding/

@@ -1,0 +1,25 @@
+{
+  "slug": "yuanze-knight",
+  "title": "元智騎士",
+  "subtitle": "元智ナイト — 助詞ローグライク",
+  "description": "化身元智騎士闖入地下城：先擊倒怪物，再回答日文助詞（は・が・も・で・に・から・まで）選擇題。共 2 章，每章 5 個關卡加 1 場魔王戰，HP 歸零就得從頭再來。題目取材自《みんなの日本語》。",
+  "controls": "W A S D 移動｜滑鼠瞄準、左鍵射擊｜空白鍵互動（進入關卡、打開魔法書教材、進傳送門）",
+  "bundle_path": "/games/yuanze-knight/project.sb3",
+  "adapter_path": "/games/yuanze-knight/adapter.json",
+  "scratch_project_id": "731822830",
+  "levels": [
+    {"key": "1-1", "chapter": 1, "title": "第一章・關卡 1", "kind": "stage", "questions_required": 1, "exp_reward": 50, "min_seconds": 5},
+    {"key": "1-2", "chapter": 1, "title": "第一章・關卡 2", "kind": "stage", "questions_required": 1, "exp_reward": 50, "min_seconds": 5},
+    {"key": "1-3", "chapter": 1, "title": "第一章・關卡 3", "kind": "stage", "questions_required": 1, "exp_reward": 50, "min_seconds": 5},
+    {"key": "1-4", "chapter": 1, "title": "第一章・關卡 4", "kind": "stage", "questions_required": 1, "exp_reward": 50, "min_seconds": 5},
+    {"key": "1-5", "chapter": 1, "title": "第一章・關卡 5", "kind": "stage", "questions_required": 1, "exp_reward": 50, "min_seconds": 5},
+    {"key": "1-X", "chapter": 1, "title": "第一章・魔王戰", "kind": "boss", "questions_required": 5, "exp_reward": 150, "min_seconds": 8},
+    {"key": "2-1", "chapter": 2, "title": "第二章・關卡 1", "kind": "stage", "questions_required": 2, "exp_reward": 80, "min_seconds": 6},
+    {"key": "2-2", "chapter": 2, "title": "第二章・關卡 2", "kind": "stage", "questions_required": 2, "exp_reward": 80, "min_seconds": 6},
+    {"key": "2-3", "chapter": 2, "title": "第二章・關卡 3", "kind": "stage", "questions_required": 2, "exp_reward": 80, "min_seconds": 6},
+    {"key": "2-4", "chapter": 2, "title": "第二章・關卡 4", "kind": "stage", "questions_required": 2, "exp_reward": 80, "min_seconds": 6},
+    {"key": "2-5", "chapter": 2, "title": "第二章・關卡 5", "kind": "stage", "questions_required": 2, "exp_reward": 80, "min_seconds": 6},
+    {"key": "2-X", "chapter": 2, "title": "第二章・最終魔王", "kind": "boss", "questions_required": 5, "exp_reward": 250, "min_seconds": 8}
+  ],
+  "questions_file": "yuanze_knight_questions.json"
+}
