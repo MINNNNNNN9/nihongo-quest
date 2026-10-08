@@ -32,8 +32,8 @@ function fail(message) {
   post('GAME_ERROR', { message });
 }
 
-async function fetchOk(url, what) {
-  const response = await fetch(url);
+async function fetchOk(url, what, options) {
+  const response = await fetch(url, options);
   if (!response.ok) throw new Error(`${what}（HTTP ${response.status}）`);
   return response;
 }
@@ -139,7 +139,8 @@ async function main() {
   if (!window.Scaffolding) throw new Error('找不到 Scratch 執行環境');
 
   const base = `/games/${slug}`;
-  const adapter = await (await fetchOk(`${base}/adapter.json`, '讀不到遊戲設定')).json();
+  // 設定檔每次都向伺服器確認是不是最新的；遊戲檔很大，靠網址上的版本碼決定要不要重新下載
+  const adapter = await (await fetchOk(`${base}/adapter.json`, '讀不到遊戲設定', { cache: 'no-cache' })).json();
 
   const scaffolding = new window.Scaffolding.Scaffolding();
   scaffolding.width = adapter.stage.width;
@@ -149,7 +150,7 @@ async function main() {
   scaffolding.appendTo(document.getElementById('project'));
 
   statusText.textContent = '下載遊戲資料中…';
-  const project = await download(await fetchOk(`${base}/project.sb3`, '讀不到遊戲檔'));
+  const project = await download(await fetchOk(`${base}/project.sb3?v=${adapter.bundleVersion || ''}`, '讀不到遊戲檔'));
   statusText.textContent = '載入素材中…';
   await scaffolding.loadProject(project);
 

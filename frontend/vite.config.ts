@@ -6,6 +6,8 @@ import { defineConfig } from 'vitest/config';
 const api = process.env.API_PROXY_TARGET ?? 'http://localhost:8010';
 
 export default defineConfig({
+  // 每次建置一個新的代號，接在播放器網址後面，網站更新後播放器頁面也會跟著換新
+  define: { __BUILD_ID__: JSON.stringify(Date.now().toString(36)) },
   plugins: [react(), tailwindcss()],
   server: {
     port: 5173,

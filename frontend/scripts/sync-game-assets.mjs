@@ -2,7 +2,8 @@
 //   scratch-games/<bundleDir>/<bundle>           → public/games/<slug>/project.sb3（bundleDir 預設 original）
 //   scratch-games/integrations/<slug>/adapter.json → public/games/<slug>/adapter.json
 //   node_modules/@turbowarp/scaffolding/dist     → public/player/scaffolding/
-import { cpSync, existsSync, mkdirSync, readdirSync, readFileSync, statSync } from 'node:fs';
+import { createHash } from 'node:crypto';
+import { cpSync, existsSync, mkdirSync, readdirSync, readFileSync, statSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -23,7 +24,9 @@ for (const slug of readdirSync(integrations)) {
   if (!existsSync(bundle)) throw new Error(`找不到 ${bundle}（adapter: ${slug}）`);
   const out = join(pub, 'games', slug);
   mkdirSync(out, { recursive: true });
-  cpSync(adapterPath, join(out, 'adapter.json'));
+  // bundleVersion：遊戲檔內容的雜湊，播放器把它接在網址後面，檔案一換瀏覽器就不會用到舊的快取
+  const bundleVersion = createHash('sha1').update(readFileSync(bundle)).digest('hex').slice(0, 12);
+  writeFileSync(join(out, 'adapter.json'), JSON.stringify({ ...adapter, bundleVersion }, null, 2));
   cpSync(bundle, join(out, 'project.sb3'));
   console.log(`synced game: ${slug}`);
 }

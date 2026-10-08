@@ -384,7 +384,10 @@ for (const target of [sprite('Tree'), sprite('BOSS')]) {
   }
   const clear = [say('')];
   script(target, hatReceive('回答正確'), clear);
-  for (const backdrop of ['GAME OVER', 'THE END', 'MAIN', 'LOBBY']) script(target, hatBackdrop(backdrop), clear);
+  script(target, hatBackdrop('THE END'), clear);
+  // 一局結束（Game Over、回主畫面、回大廳）時出題者一定要退場。原專案在魔王關答錯致死時，
+  // 魔王會被「再問一次」的流程重新顯示出來，結果重新開始後還站在大廳裡
+  for (const backdrop of ['GAME OVER', 'MAIN', 'LOBBY']) script(target, hatBackdrop(backdrop), [say(''), hide]);
 }
 
 // 同一局不重複出題
@@ -522,7 +525,9 @@ script(stage, hatReceive('WM'), [
   waitUntil(lt(V(ALIVE), 1)),
   when(gt(V('HP'), 0), [set(FIGHTING, 0), wait(1), broadcast('怪物死亡'), set('控制叫怪', 0)]),
 ]);
-script(stage, hatBackdrop('GAME OVER'), [set(FIGHTING, 0)]);
+script(stage, hatBackdrop('GAME OVER'), [set(FIGHTING, 0), broadcast('隱藏選項')]);
+// 新的一局從乾淨的狀態開始：「控制叫怪」在魔王關會停在 2，不重設的話下一局的題目會由魔王來問
+script(stage, hatBackdrop('LOBBY'), [set('控制叫怪', 0)]);
 
 for (const monster of Object.values(MONSTERS)) {
   const target = sprite(monster.name);

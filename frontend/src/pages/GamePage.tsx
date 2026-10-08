@@ -165,7 +165,7 @@ export function GamePage() {
             <iframe
               ref={iframeRef}
               title={`${game.data.title} 遊戲畫面`}
-              src={`/player/index.html?game=${encodeURIComponent(slug)}${import.meta.env.DEV ? '&debug=1' : ''}`}
+              src={`/player/index.html?game=${encodeURIComponent(slug)}&b=${__BUILD_ID__}${import.meta.env.DEV ? '&debug=1' : ''}`}
               className="absolute inset-0 h-full w-full border-0"
               allow="autoplay; fullscreen"
             />
