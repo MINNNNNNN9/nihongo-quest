@@ -1,0 +1,16 @@
+{
+  "game": "yuanze-knight",
+  "bundle": "yuanze-knight-v1.2.sb3",
+  "stage": { "width": 480, "height": 360 },
+  "lobbyBackdrops": ["LOAD", "INS", "MAIN", "LOBBY"],
+  "levelBackdrops": ["1-1", "1-2", "1-3", "1-4", "1-5", "1-X", "2-1", "2-2", "2-3", "2-4", "2-5", "2-X"],
+  "runStartBackdrop": "1-1",
+  "clearedBackdrop": "THE END",
+  "failedBackdrop": "GAME OVER",
+  "correctBroadcast": "回答正確",
+  "wrongBroadcast": "回答錯誤",
+  "levelCompleteBroadcasts": ["答題成功", "擊倒魔王"],
+  "questionList": "題目",
+  "questionKeyPrefix": "Q",
+  "battleScoreVariable": "戰鬥評價"
+}

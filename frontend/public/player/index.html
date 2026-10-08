@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Nihongo Quest Player</title>
+    <style>
+      html, body { margin: 0; height: 100%; background: #0d1020; overflow: hidden; }
+      body { font-family: "Zen Maru Gothic", "Noto Sans TC", system-ui, sans-serif; color: #f6efdd; }
+      #project { position: absolute; inset: 0; }
+      #overlay {
+        position: absolute; inset: 0; display: grid; place-content: center; justify-items: center; gap: 16px;
+        background: radial-gradient(circle at 50% 35%, #2a2f5c 0%, #0d1020 70%);
+      }
+      #overlay[hidden] { display: none; }
+      #status { font-size: 15px; letter-spacing: 0.08em; min-height: 1.4em; }
+      #start {
+        font: inherit; font-size: 20px; font-weight: 700; letter-spacing: 0.2em; color: #1a1330;
+        padding: 14px 36px; border: 0; border-radius: 4px; cursor: pointer;
+        background: linear-gradient(#ffd97a, #e8a93a); box-shadow: 0 4px 0 #8a5a12, 0 0 28px #e8a93a66;
+      }
+      #start:hover { filter: brightness(1.08); }
+      #start:active { transform: translateY(3px); box-shadow: 0 1px 0 #8a5a12; }
+      #start[hidden] { display: none; }
+    </style>
+  </head>
+  <body>
+    <div id="project"></div>
+    <div id="overlay">
+      <div id="status">準備中…</div>
+      <button id="start" type="button" hidden>▶ 冒険を始める</button>
+    </div>
+    <script src="./scaffolding/scaffolding-min.js"></script>
+    <script type="module" src="./bridge.js"></script>
+  </body>
+</html>

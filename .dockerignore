@@ -1,0 +1,8 @@
+.git
+.env
+**/node_modules
+**/dist
+**/__pycache__
+frontend/public/games
+frontend/public/player/scaffolding
+docs

@@ -1,0 +1,95 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Zen Maru Gothic", "Noto Sans TC", "PingFang TC", system-ui, sans-serif;
+  --font-pixel: "DotGothic16", "Zen Maru Gothic", monospace;
+
+  --color-night-950: #0a0c1c;
+  --color-night-900: #12142b;
+  --color-night-800: #1b1e3d;
+  --color-night-700: #272b55;
+  --color-night-600: #3a3f76;
+  --color-washi: #f6efdd;
+  --color-mist: #a9add0;
+  --color-shu: #e2503c;
+  --color-gold: #f2c14e;
+  --color-matcha: #86c06c;
+  --color-sora: #6fb7e6;
+
+  --animate-rise: rise 0.5s ease-out both;
+  --animate-pop: pop 0.6s cubic-bezier(0.2, 1.6, 0.4, 1) both;
+  --animate-shine: shine 2.4s linear infinite;
+  --animate-float: float 3s ease-in-out infinite;
+
+  @keyframes rise {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes pop {
+    from { opacity: 0; transform: scale(0.4) rotate(-6deg); }
+    to { opacity: 1; transform: scale(1) rotate(0); }
+  }
+  @keyframes shine {
+    from { background-position: 200% 0; }
+    to { background-position: -200% 0; }
+  }
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-6px); }
+  }
+}
+
+@layer base {
+  html { color-scheme: dark; }
+  body {
+    min-height: 100dvh;
+    color: var(--color-washi);
+    background-color: var(--color-night-950);
+    /* 青海波（せいがいは）紋樣＋夜空漸層 */
+    background-image:
+      radial-gradient(circle at 50% 100%, transparent 58%, #ffffff09 59%, #ffffff09 62%, transparent 63%),
+      radial-gradient(circle at 0% 50%, transparent 58%, #ffffff06 59%, #ffffff06 62%, transparent 63%),
+      radial-gradient(circle at 100% 50%, transparent 58%, #ffffff06 59%, #ffffff06 62%, transparent 63%),
+      radial-gradient(ellipse at 50% -10%, #2c2f6b 0%, transparent 60%);
+    background-size: 56px 28px, 56px 28px, 56px 28px, 100% 100%;
+    background-attachment: fixed;
+  }
+  :focus-visible { outline: 2px solid var(--color-gold); outline-offset: 2px; }
+}
+
+@layer components {
+  .panel {
+    @apply rounded-lg border-2 border-gold/25 bg-night-800/85 p-5 shadow-[0_6px_0_#00000055] backdrop-blur-sm;
+  }
+  .heading {
+    @apply font-pixel tracking-widest text-gold;
+  }
+  .btn-primary, .btn-danger, .btn-ghost {
+    @apply inline-flex cursor-pointer items-center justify-center gap-2 rounded px-4 py-2 font-bold tracking-wider transition
+      disabled:cursor-not-allowed disabled:opacity-50;
+  }
+  .btn-primary {
+    @apply bg-gradient-to-b from-[#ffd97a] to-[#e8a93a] text-night-950 shadow-[0_4px_0_#8a5a12]
+      hover:brightness-110 active:translate-y-[3px] active:shadow-[0_1px_0_#8a5a12];
+  }
+  .btn-danger {
+    @apply bg-shu text-white shadow-[0_4px_0_#7c2418] hover:brightness-110 active:translate-y-[3px] active:shadow-none;
+  }
+  .btn-ghost {
+    @apply border-2 border-night-600 text-washi hover:border-gold/60 hover:text-gold;
+  }
+  .field {
+    @apply w-full rounded border-2 border-night-600 bg-night-900 px-3 py-2 text-washi placeholder:text-mist/50
+      focus:border-gold focus:outline-none;
+  }
+  .label {
+    @apply mb-1 block text-sm font-bold tracking-wider text-mist;
+  }
+  .chip {
+    @apply inline-flex items-center rounded-full border border-night-600 bg-night-900 px-2.5 py-0.5 text-xs text-mist;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+}

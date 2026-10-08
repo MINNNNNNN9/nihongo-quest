@@ -9,5 +9,6 @@ staticfiles/
 *.log
 coverage/
 # 由 scripts/sync-game-assets.mjs 從 scratch-games/ 與 node_modules 複製產生
-frontend/public/games/*/project.sb3
+frontend/public/games/
 frontend/public/player/scaffolding/
+*.tsbuildinfo
