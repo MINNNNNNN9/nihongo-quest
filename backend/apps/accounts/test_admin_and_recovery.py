@@ -106,3 +106,13 @@ def test_admin_can_open_user_pages(make_user):
     assert made.status_code == 302
     student.profile.refresh_from_db()
     assert student.profile.is_teacher is True
+
+
+def test_stale_admin_login_form_is_sent_back_to_retry():
+    browser = APIClient(enforce_csrf_checks=True)
+    stale = browser.post("/admin/login/?next=/admin/", {"username": "x", "password": "y", "csrfmiddlewaretoken": "stale"})
+    assert stale.status_code == 302 and stale["Location"] == "/admin/login/?next=/admin/"
+    page = browser.get(stale["Location"])
+    assert page.status_code == 200 and "安全驗證已經過期" in page.content.decode()
+    # API 仍然是 403，不會被導走
+    assert browser.post("/api/auth/login/", {"username": "x", "password": "y"}, format="json").status_code == 403

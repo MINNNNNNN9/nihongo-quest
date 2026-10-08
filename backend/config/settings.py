@@ -203,3 +203,6 @@ LOGGING = {
     "handlers": {"console": {"class": "logging.StreamHandler"}},
     "root": {"handlers": ["console"], "level": env("DJANGO_LOG_LEVEL", "INFO")},
 }
+
+# 後台表單的安全驗證過期時，帶回原頁重試而不是顯示 403（見 apps/common/csrf.py）
+CSRF_FAILURE_VIEW = "apps.common.csrf.csrf_failure"
