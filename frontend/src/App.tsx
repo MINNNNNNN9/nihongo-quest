@@ -4,7 +4,7 @@ import { Navigate, Route, Routes } from 'react-router-dom';
 import { Layout } from './components/Layout';
 import { LoadingPanel } from './components/ui';
 import { GuestOnly, RequireAuth } from './features/auth/AuthContext';
-import { LoginPage, RegisterPage } from './pages/AuthPages';
+import { ForgotPasswordPage, LoginPage, RegisterPage, ResetPasswordPage } from './pages/AuthPages';
 import { ClassDetailPage, ClassesPage } from './pages/ClassesPage';
 import { GamePage } from './pages/GamePage';
 import { LeaderboardPage } from './pages/LeaderboardPage';
@@ -22,6 +22,9 @@ export function App() {
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
       </Route>
+      {/* 重設密碼的連結可能在已登入其他帳號的瀏覽器打開，所以不限制登入狀態 */}
+      <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+      <Route path="/reset-password" element={<ResetPasswordPage />} />
       <Route element={<RequireAuth />}>
         <Route element={<Layout />}>
           <Route path="/" element={<LobbyPage />} />

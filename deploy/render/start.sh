@@ -11,6 +11,8 @@ sed -e "s/listen 80;/listen ${PORT};/" -e "s#http://backend:8000#http://127.0.0.
 # 沒有新的 migration 時跳過 migrate（它會額外做幾十次查詢，資料庫在遠端時很慢）
 python manage.py migrate --check >/dev/null 2>&1 || python manage.py migrate --noinput
 python manage.py seed_games
+# 設了 DJANGO_SUPERUSER_USERNAME／PASSWORD 才會建立；已存在就不動
+python manage.py ensure_superuser
 
 nginx
 # 免費方案記憶體只有 512 MB：兩個 worker，各開幾條執行緒，等資料庫回應時還能處理其他人的請求

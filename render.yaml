@@ -17,3 +17,13 @@ services:
         generateValue: true
       - key: DJANGO_DEBUG
         value: "False"
+      # 後台超級管理員：啟動時若這個帳號不存在就建立（之後改密碼請在後台改，這裡不會覆蓋）
+      - key: DJANGO_SUPERUSER_USERNAME
+        sync: false
+      - key: DJANGO_SUPERUSER_PASSWORD
+        sync: false
+      # 找回密碼的寄信設定（選用）：Brevo 的 API 金鑰與驗證過的寄件信箱
+      - key: BREVO_API_KEY
+        sync: false
+      - key: DEFAULT_FROM_EMAIL
+        sync: false

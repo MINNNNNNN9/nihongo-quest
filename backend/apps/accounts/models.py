@@ -16,6 +16,8 @@ class PlayerProfile(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="profile")
     display_name = models.CharField("冒險者暱稱", max_length=20, unique=True)
     show_on_leaderboard = models.BooleanField("公開於排行榜", default=True)
+    # 老師才能建立班級；由管理員在後台設定
+    is_teacher = models.BooleanField("老師", default=False)
     # total_exp 是 ExperienceTransaction 加總的快取，只會在 gamification.services 的交易內更新。
     total_exp = models.PositiveIntegerField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)

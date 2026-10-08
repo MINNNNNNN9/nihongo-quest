@@ -14,9 +14,24 @@
 | `DJANGO_SECURE_SSL_REDIRECT` | 預設 `True`（非 DEBUG 時把 HTTP 轉到 HTTPS） | 只有本機用 HTTP 測試正式映像時設 `False` |
 | `DJANGO_HSTS_SECONDS` | 預設一年 | 首次上線可先設小一點 |
 | `THROTTLE_*` | 限流，見 `docs/api.md` | 視流量調整 |
+| `DATABASE_URL` | 託管資料庫的連線網址；設定後取代 `POSTGRES_*` | Render 等平台使用 |
+| `DJANGO_SUPERUSER_USERNAME`／`PASSWORD`／`EMAIL` | 啟動時若這個帳號不存在，就建立為超級管理員（已存在不會覆蓋密碼） | 沒有 Shell 的平台用它建立第一個管理員 |
+| `BREVO_API_KEY` | Brevo 的 API 金鑰；設定後「找回密碼」才會寄信（走 HTTPS，不受免費方案擋 SMTP 的影響） | 選用 |
+| `EMAIL_HOST`／`EMAIL_PORT`／`EMAIL_HOST_USER`／`EMAIL_HOST_PASSWORD`／`EMAIL_USE_TLS` | 改用 SMTP 寄信（沒有 `BREVO_API_KEY` 時） | 選用 |
+| `DEFAULT_FROM_EMAIL` | 寄件者，例 `Nihongo Quest <you@example.com>`；用 Brevo 時必須是在 Brevo 驗證過的信箱 | 寄信時必填 |
 | `FRONTEND_PORT`／`BACKEND_PORT`／`WEB_PORT` | 對外埠號 | |
 
 `DEBUG=False` 時自動啟用：Secure Cookie、HSTS、`X-Content-Type-Options`、依 `X-Forwarded-Proto` 判斷 HTTPS。
+
+## 管理後台
+
+網址是 `/admin/`，用超級管理員登入（登入後網站右上角也會出現「後台」連結）。
+
+- **建立老師帳號**：使用者 → 新增使用者，填帳號、電子郵件、密碼後儲存；在下一頁的「玩家資料」勾選「老師」。
+  已經註冊的帳號可以在列表勾選後用動作「設為老師」。只有老師（與管理員）可以建立班級。
+- **重設使用者密碼**：使用者 → 點進該帳號 → 密碼欄位下方的「這個表單」。
+- **找回密碼**：登入頁的「忘記密碼？」會寄重設連結到註冊信箱，需要先設定寄信（見上表）；
+  沒設定時頁面會請使用者聯絡管理員。
 
 ## 開發環境
 

@@ -14,7 +14,10 @@ def api_for(user) -> APIClient:
 
 @pytest.fixture
 def teacher(make_user):
-    return make_user("sensei")
+    user = make_user("sensei")
+    user.profile.is_teacher = True
+    user.profile.save()
+    return user
 
 
 @pytest.fixture

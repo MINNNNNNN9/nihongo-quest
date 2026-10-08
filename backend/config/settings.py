@@ -150,6 +150,24 @@ if not DEBUG:
     SECURE_HSTS_INCLUDE_SUBDOMAINS = True
     SECURE_CONTENT_TYPE_NOSNIFF = True
 
+# --- 寄信（找回密碼）---
+# 有 BREVO_API_KEY 就走 Brevo 的 HTTPS API（免費雲端方案通常擋 SMTP）；否則有 EMAIL_HOST 就走 SMTP；
+# 都沒有時信件只會印在記錄裡，前端會改成請使用者聯絡管理員。
+BREVO_API_KEY = os.environ.get("BREVO_API_KEY", "")
+if BREVO_API_KEY:
+    EMAIL_BACKEND = "apps.common.email.BrevoBackend"
+elif os.environ.get("EMAIL_HOST"):
+    EMAIL_HOST = env("EMAIL_HOST")
+    EMAIL_PORT = int(env("EMAIL_PORT", "587"))
+    EMAIL_HOST_USER = env("EMAIL_HOST_USER", "")
+    EMAIL_HOST_PASSWORD = env("EMAIL_HOST_PASSWORD", "")
+    EMAIL_USE_TLS = env_bool("EMAIL_USE_TLS", True)
+else:
+    EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+EMAIL_ENABLED = bool(BREVO_API_KEY or os.environ.get("EMAIL_HOST"))
+DEFAULT_FROM_EMAIL = env("DEFAULT_FROM_EMAIL", "Nihongo Quest <no-reply@localhost>")
+PASSWORD_RESET_TIMEOUT = 2 * 60 * 60  # 重設連結 2 小時內有效
+
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": ["rest_framework.authentication.SessionAuthentication"],
     "DEFAULT_PERMISSION_CLASSES": ["rest_framework.permissions.IsAuthenticated"],

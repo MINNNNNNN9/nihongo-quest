@@ -14,6 +14,9 @@ export interface Profile {
   total_exp: number;
   progress: Progress;
   created_at: string;
+  /** 老師可以建立班級；由管理員在後台設定 */
+  is_teacher: boolean;
+  is_staff: boolean;
 }
 
 export interface Game {

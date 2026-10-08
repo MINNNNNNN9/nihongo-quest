@@ -5,6 +5,7 @@ import { Link, useNavigate, useParams } from 'react-router-dom';
 import { LevelBadge } from '../components/ExpBar';
 import { RubyText } from '../components/Ruby';
 import { ErrorPanel, FormError, LoadingPanel, PageTitle, StatCard } from '../components/ui';
+import { useMe } from '../features/auth/AuthContext';
 import { api, ApiError } from '../lib/api';
 import { formatDateTime, formatPercent } from '../lib/format';
 import type { ClassroomDetail, ClassroomSummary } from '../lib/types';
@@ -19,6 +20,8 @@ export function ClassesPage() {
   const navigate = useNavigate();
   const [code, setCode] = useState('');
   const [name, setName] = useState('');
+  const { data: me } = useMe();
+  const canTeach = Boolean(me?.is_teacher || me?.is_staff);
   const classes = useQuery({ queryKey: CLASSES_KEY, queryFn: () => api.get<ClassroomSummary[]>('/classes/') });
 
   const opened = (classroom: ClassroomSummary) => {
@@ -95,7 +98,15 @@ export function ClassesPage() {
           </button>
         </form>
 
-        <form className="panel space-y-3" onSubmit={submit(create.mutate)}>
+        {!canTeach && (
+          <section className="panel space-y-2">
+            <h2 className="heading text-lg">建立班級（老師）</h2>
+            <p className="text-sm leading-relaxed text-mist">
+              只有老師帳號可以建立班級。如果你是老師，請聯絡網站管理員幫你開通；學生用左邊的代碼加入班級就可以了。
+            </p>
+          </section>
+        )}
+        <form className={canTeach ? 'panel space-y-3' : 'hidden'} onSubmit={submit(create.mutate)}>
           <h2 className="heading text-lg">建立班級（老師）</h2>
           <div>
             <label className="label" htmlFor="class-name">

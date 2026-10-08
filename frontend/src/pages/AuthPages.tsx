@@ -1,10 +1,11 @@
+import { useMutation, useQuery } from '@tanstack/react-query';
 import { useState, type FormEvent } from 'react';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 
 import { Torii, Wordmark } from '../components/Layout';
 import { FormError } from '../components/ui';
 import { useAuthActions } from '../features/auth/AuthContext';
-import { ApiError } from '../lib/api';
+import { api, ApiError } from '../lib/api';
 
 function AuthShell({ title, kana, children }: { title: string; kana: string; children: React.ReactNode }) {
   return (
@@ -64,6 +65,11 @@ export function LoginPage() {
             value={form.password}
             onChange={(e) => setForm({ ...form, password: e.target.value })}
           />
+        </div>
+        <div className="text-right text-sm">
+          <Link to="/forgot-password" className="text-mist hover:text-shu hover:underline">
+            忘記密碼？
+          </Link>
         </div>
         <FormError message={errorText(login.error)} />
         <button type="submit" className="btn-primary w-full" disabled={login.isPending}>
@@ -150,6 +156,129 @@ export function RegisterPage() {
           登入
         </Link>
       </p>
+    </AuthShell>
+  );
+}
+
+export function ForgotPasswordPage() {
+  const [email, setEmail] = useState('');
+  const config = useQuery({
+    queryKey: ['password-reset-config'],
+    queryFn: () => api.get<{ enabled: boolean }>('/auth/password/forgot/'),
+  });
+  const request = useMutation({ mutationFn: () => api.post<void>('/auth/password/forgot/', { email: email.trim() }) });
+  const submit = (event: FormEvent) => {
+    event.preventDefault();
+    request.mutate();
+  };
+
+  return (
+    <AuthShell title="找回密碼" kana="パスワードをわすれた">
+      {config.data?.enabled === false ? (
+        <p className="rounded-lg bg-night-900 p-4 text-sm leading-relaxed">
+          這個網站目前沒有開啟寄信功能，沒辦法用電子郵件重設密碼。請聯絡你的老師或管理員，請他們在後台幫你重設。
+        </p>
+      ) : request.isSuccess ? (
+        <p className="rounded-lg bg-matcha/10 p-4 text-sm leading-relaxed" role="status">
+          如果這個信箱有註冊過，重設密碼的連結已經寄出，請在 2 小時內打開信裡的連結。
+          <br />
+          沒收到的話，看一下垃圾信匣，或確認信箱有沒有打錯。
+        </p>
+      ) : (
+        <form onSubmit={submit} className="space-y-4">
+          <p className="text-sm text-mist">輸入註冊時填的電子郵件，我們會寄一封重設密碼的信給你，信裡也會寫你的登入帳號。</p>
+          <div>
+            <label className="label" htmlFor="forgot-email">
+              電子郵件
+            </label>
+            <input
+              id="forgot-email"
+              type="email"
+              className="field"
+              autoComplete="email"
+              required
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
+          </div>
+          <FormError message={errorText(request.error)} />
+          <button type="submit" className="btn-primary w-full" disabled={request.isPending || config.isPending}>
+            {request.isPending ? '寄送中…' : '寄出重設連結'}
+          </button>
+        </form>
+      )}
+      <p className="mt-4 text-center text-sm text-mist">
+        <Link to="/login" className="font-bold text-shu hover:underline">
+          回登入頁
+        </Link>
+      </p>
+    </AuthShell>
+  );
+}
+
+export function ResetPasswordPage() {
+  const [params] = useSearchParams();
+  const [password, setPassword] = useState('');
+  const [confirm, setConfirm] = useState('');
+  const reset = useMutation({
+    mutationFn: () =>
+      api.post<void>('/auth/password/reset/', { uid: params.get('uid') ?? '', token: params.get('token') ?? '', new_password: password }),
+  });
+  const mismatch = confirm !== '' && confirm !== password;
+  const submit = (event: FormEvent) => {
+    event.preventDefault();
+    if (!mismatch) reset.mutate();
+  };
+
+  return (
+    <AuthShell title="設定新密碼" kana="あたらしいパスワード">
+      {reset.isSuccess ? (
+        <div className="space-y-4">
+          <p className="rounded-lg bg-matcha/10 p-4 text-sm" role="status">
+            密碼已經更新，請用新密碼登入。
+          </p>
+          <Link to="/login" className="btn-primary w-full">
+            前往登入
+          </Link>
+        </div>
+      ) : (
+        <form onSubmit={submit} className="space-y-4">
+          <div>
+            <label className="label" htmlFor="new-password">
+              新密碼
+            </label>
+            <input
+              id="new-password"
+              type="password"
+              className="field"
+              autoComplete="new-password"
+              required
+              minLength={8}
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+            <p className="mt-1 text-xs text-mist/70">至少 8 個字元，不能全是數字或太常見。</p>
+          </div>
+          <div>
+            <label className="label" htmlFor="confirm-password">
+              再輸入一次
+            </label>
+            <input
+              id="confirm-password"
+              type="password"
+              className="field"
+              autoComplete="new-password"
+              required
+              value={confirm}
+              onChange={(e) => setConfirm(e.target.value)}
+            />
+          </div>
+          <FormError message={mismatch ? '兩次輸入的密碼不一樣' : errorText(reset.error)} />
+          <button type="submit" className="btn-primary w-full" disabled={reset.isPending || mismatch}>
+            {reset.isPending ? '更新中…' : '更新密碼'}
+          </button>
+        </form>
+      )}
     </AuthShell>
   );
 }

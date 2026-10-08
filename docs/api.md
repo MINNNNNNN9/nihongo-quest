@@ -52,6 +52,9 @@
 | GET | `/auth/me/` | 目前登入者（含等級進度） |
 | PATCH | `/auth/me/` | 修改 `display_name`、`email`、`show_on_leaderboard` |
 | POST | `/auth/password/` | `{current_password, new_password}` → 204 |
+| GET | `/auth/password/forgot/` | `{enabled}`：伺服器有沒有設定寄信 |
+| POST | `/auth/password/forgot/` | `{email}` → 204。信箱存在就寄出重設連結（2 小時有效）；不存在也回 204 |
+| POST | `/auth/password/reset/` | `{uid, token, new_password}` → 204；連結無效或過期回 400 |
 
 ### 遊戲
 
@@ -126,7 +129,7 @@
 | 方法 | 路徑 | 說明 |
 | --- | --- | --- |
 | GET | `/classes/` | 我教的與我加入的班級 |
-| POST | `/classes/` | `{name}` → 建立班級（建立者是老師），回傳 6 碼加入代碼 |
+| POST | `/classes/` | `{name}` → 建立班級，回傳 6 碼加入代碼。只有老師帳號（`is_teacher`，由管理員在後台設定）或管理員可以建立，其他人回 403 |
 | POST | `/classes/join/` | `{code}` → 加入班級（不分大小寫；限流同登入） |
 | GET | `/classes/{code}/` | 班內排行榜；老師另外會拿到 `report`（學生名單、各助詞正確率、最常答錯題目） |
 | DELETE | `/classes/{code}/` | 刪除班級（僅老師）→ 204 |

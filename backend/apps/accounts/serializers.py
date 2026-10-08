@@ -1,5 +1,8 @@
 from django.contrib.auth import authenticate, password_validation
+from django.contrib.auth.tokens import default_token_generator
 from django.db import transaction
+from django.utils.encoding import force_str
+from django.utils.http import urlsafe_base64_decode
 from rest_framework import serializers
 from rest_framework.validators import UniqueValidator
 
@@ -22,11 +25,15 @@ class ProfileSerializer(serializers.ModelSerializer):
         validators=[UniqueValidator(PlayerProfile.objects.all(), message="這個暱稱已被使用")],
     )
     progress = serializers.SerializerMethodField()
+    is_staff = serializers.BooleanField(source="user.is_staff", read_only=True)
 
     class Meta:
         model = PlayerProfile
-        fields = ["username", "email", "display_name", "show_on_leaderboard", "total_exp", "progress", "created_at"]
-        read_only_fields = ["total_exp", "created_at"]
+        fields = [
+            "username", "email", "display_name", "show_on_leaderboard", "total_exp", "progress", "created_at",
+            "is_teacher", "is_staff",
+        ]
+        read_only_fields = ["total_exp", "created_at", "is_teacher"]
 
     def get_progress(self, obj) -> dict:
         return level_progress(obj.total_exp)
@@ -96,3 +103,25 @@ class ChangePasswordSerializer(serializers.Serializer):
     def validate_new_password(self, value):
         password_validation.validate_password(value, self.context["request"].user)
         return value
+
+
+class ForgotPasswordSerializer(serializers.Serializer):
+    email = serializers.EmailField()
+
+
+class ResetPasswordSerializer(serializers.Serializer):
+    uid = serializers.CharField()
+    token = serializers.CharField()
+    new_password = serializers.CharField(write_only=True, trim_whitespace=False)
+
+    def validate(self, attrs):
+        invalid = serializers.ValidationError("這個重設連結無效或已經過期，請重新申請")
+        try:
+            user = User.objects.get(pk=force_str(urlsafe_base64_decode(attrs["uid"])), is_active=True)
+        except (User.DoesNotExist, ValueError, OverflowError):
+            raise invalid
+        if not default_token_generator.check_token(user, attrs["token"]):
+            raise invalid
+        password_validation.validate_password(attrs["new_password"], user)
+        attrs["user"] = user
+        return attrs

@@ -1,6 +1,6 @@
 """班級：班內排行榜（成員都看得到）與學習報告（只有老師看得到）。"""
 from django.db.models import Count, Max, Q
-from rest_framework.exceptions import NotFound
+from rest_framework.exceptions import NotFound, PermissionDenied
 
 from apps.accounts.models import PlayerProfile
 from apps.common.api import Conflict
@@ -25,6 +25,8 @@ def classrooms_for(user) -> list[Classroom]:
 
 
 def create(user, name: str) -> Classroom:
+    if not (user.profile.is_teacher or user.is_staff):
+        raise PermissionDenied("只有老師帳號可以建立班級，請聯絡管理員開通")
     if Classroom.objects.filter(teacher=user).count() >= MAX_CLASSES_PER_TEACHER:
         raise Conflict(f"每個帳號最多建立 {MAX_CLASSES_PER_TEACHER} 個班級")
     return Classroom.objects.create(teacher=user, name=name)

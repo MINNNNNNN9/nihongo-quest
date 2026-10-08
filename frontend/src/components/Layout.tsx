@@ -80,6 +80,15 @@ export function Layout() {
                 </div>
               </div>
             </NavLink>
+            {me.is_staff && (
+              <a
+                href="/admin/"
+                className="hidden shrink-0 rounded-lg px-2.5 py-1.5 text-sm font-medium text-mist transition hover:bg-night-700 hover:text-washi sm:block"
+                title="管理後台：建立老師帳號、重設使用者密碼"
+              >
+                後台
+              </a>
+            )}
             <ThemePicker />
             <button
               type="button"
