@@ -7,6 +7,8 @@ import { isTouchDevice, setupTouchControls } from './touch.js';
 import { createTracker } from './tracker.js';
 
 const SOURCE = 'nihongo-quest-game';
+const HOST_SOURCE = 'nihongo-quest-host'; // 外層頁面送進來的訊息
+const VOLUME_KEY = 'nq:volume';
 const PROTOCOL_VERSION = 1;
 
 const params = new URLSearchParams(location.search);
@@ -35,6 +37,34 @@ async function fetchOk(url, what) {
   if (!response.ok) throw new Error(`${what}（HTTP ${response.status}）`);
   return response;
 }
+
+// ---- 音量 ----
+// 原專案沒有音量設定；這裡調整 Scratch 音訊引擎最後一級的增益，等於整個遊戲的總音量。
+let audioEngine = null;
+let volume = storedVolume();
+
+/** 上次在外層頁面選的音量（同源時讀得到），讓遊戲一開始就是那個大小。 */
+function storedVolume() {
+  try {
+    const saved = JSON.parse(localStorage.getItem(VOLUME_KEY));
+    if (saved && typeof saved.level === 'number') return saved.muted ? 0 : (saved.level / 100) ** 2;
+  } catch {
+    /* 讀不到就用預設值 */
+  }
+  return 0.25; // 預設是滑桿一半的位置
+}
+
+function applyVolume(value) {
+  if (typeof value === 'number' && Number.isFinite(value)) volume = Math.min(1, Math.max(0, value));
+  if (audioEngine && audioEngine.inputNode) audioEngine.inputNode.gain.value = volume;
+}
+
+window.addEventListener('message', (event) => {
+  // 只接受外層頁面（指定來源）送來的訊息
+  if (event.source !== window.parent || event.origin !== hostOrigin) return;
+  const data = event.data;
+  if (data && data.source === HOST_SOURCE && data.type === 'SET_VOLUME') applyVolume(data.value);
+});
 
 /** 邊下載邊更新進度（遊戲檔有十幾 MB）。伺服器沒給大小或瀏覽器不支援串流時，就照一般方式整個讀完。 */
 async function download(response) {
@@ -124,6 +154,8 @@ async function main() {
   await scaffolding.loadProject(project);
 
   observe(scaffolding.vm, adapter);
+  audioEngine = scaffolding.vm.runtime.audioEngine;
+  applyVolume();
   if (params.has('debug')) window.__scaffolding = scaffolding; // 開發除錯用：?debug=1
   statusText.textContent = '';
   startButton.hidden = false;

@@ -39,7 +39,7 @@ const EMPTY_RUN: RunState = {
   lastAnswer: null,
 };
 
-const GAME_ORIGIN = import.meta.env.VITE_GAME_ORIGIN ?? window.location.origin;
+export const GAME_ORIGIN = import.meta.env.VITE_GAME_ORIGIN ?? window.location.origin;
 const RETRIES = 3;
 
 /** 網路或伺服器暫時性錯誤時重試。事件帶有序號，重送不會被重複計算。 */

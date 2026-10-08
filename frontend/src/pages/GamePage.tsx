@@ -4,11 +4,13 @@ import { Link, useBlocker, useParams } from 'react-router-dom';
 
 import { FeedbackCard } from '../components/FeedbackCard';
 import { FuriganaToggle } from '../components/Ruby';
+import { Icon } from '../components/icons';
 import { hasSeenTutorial, Tutorial } from '../components/Tutorial';
 import { LevelMap } from '../components/LevelMap';
 import { LevelUpOverlay } from '../components/LevelUpOverlay';
 import { ErrorPanel, LoadingPanel } from '../components/ui';
 import { useGameBridge, type Notice, type PlayerStatus, type RunState } from '../features/game/useGameBridge';
+import { useGameVolume } from '../features/game/useGameVolume';
 import { api } from '../lib/api';
 import type { GameDetail, GameLevel } from '../lib/types';
 
@@ -93,6 +95,7 @@ export function GamePage() {
     queryFn: () => api.get<GameLevel[]>(`/games/${slug}/levels/`),
   });
   const bridge = useGameBridge(slug, iframeRef);
+  const volume = useGameVolume(iframeRef, bridge.status);
   const [showTutorial, setShowTutorial] = useState(() => !hasSeenTutorial());
 
   // Scratch 遊戲沒辦法存檔：冒險途中離開，這一局就作廢，所以離開前先提醒
@@ -120,7 +123,30 @@ export function GamePage() {
           <h1 className="heading text-2xl sm:text-3xl">{game.data.title}</h1>
           <div className="text-sm text-mist">{game.data.subtitle}</div>
         </div>
-        <div className="flex gap-2">
+        <div className="flex flex-wrap items-center gap-2">
+          {/* 音量：喇叭鈕切換靜音，滑桿調大小 */}
+          <div className="flex items-center gap-1 rounded-lg border border-night-600 bg-night-800 pl-1 pr-3">
+            <button
+              type="button"
+              className="grid h-9 w-9 place-items-center rounded-lg text-washi transition hover:bg-night-700"
+              aria-label={volume.muted ? '開啟聲音' : '靜音'}
+              aria-pressed={volume.muted}
+              title={volume.muted ? '開啟聲音' : '靜音'}
+              onClick={volume.toggleMuted}
+            >
+              <Icon name={volume.muted ? 'mute' : 'volume'} />
+            </button>
+            <input
+              type="range"
+              min={0}
+              max={100}
+              step={5}
+              value={volume.muted ? 0 : volume.level}
+              aria-label="遊戲音量"
+              className="h-1.5 w-24 cursor-pointer accent-shu sm:w-28"
+              onChange={(event) => volume.setLevel(Number(event.target.value))}
+            />
+          </div>
           <button type="button" className="btn-ghost text-sm" onClick={() => setShowTutorial(true)}>
             ？ 玩法說明
           </button>
