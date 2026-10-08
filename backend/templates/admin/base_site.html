@@ -1,0 +1,195 @@
+{% extends "admin/base.html" %}
+{% comment %}
+後台的外觀：沿用 Django admin 的版面，只換色票、字體與圓角，讓它和前台是同一套風格
+（暖白底、墨色字、朱色強調；深色模式用炭黑底）。Django admin 的顏色都由 CSS 變數控制。
+{% endcomment %}
+
+{% block title %}{% if subtitle %}{{ subtitle }} | {% endif %}{{ title }} | Nihongo Quest 管理後台{% endblock %}
+
+{% block extrastyle %}{{ block.super }}
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@700&display=swap">
+<style>
+  :root, html[data-theme="light"] {
+    --primary: #c2412d;
+    --secondary: #1c1b19;
+    --accent: #e0b458;
+    --primary-fg: #ffffff;
+    --body-fg: #1c1b19;
+    --body-bg: #f7f5f0;
+    --body-quiet-color: #6f6b63;
+    --body-medium-color: #4a4640;
+    --body-loud-color: #000000;
+    --header-color: #f7f5f0;
+    --header-branding-color: #ffffff;
+    --header-bg: #1c1b19;
+    --header-link-color: #ffffff;
+    --breadcrumbs-fg: #6f6b63;
+    --breadcrumbs-link-fg: #1c1b19;
+    --breadcrumbs-bg: #f2efe8;
+    --link-fg: #c2412d;
+    --link-hover-color: #8f2f20;
+    --link-selected-fg: #c2412d;
+    --hairline-color: #e6e1d6;
+    --border-color: #ddd7cb;
+    --error-fg: #c2412d;
+    --message-success-bg: #e3f0e8;
+    --message-warning-bg: #fbf1d6;
+    --message-error-bg: #fbe3de;
+    --darkened-bg: #f2efe8;
+    --selected-bg: #ece8df;
+    --selected-row: #fbf3df;
+    --button-fg: #ffffff;
+    --button-bg: #1c1b19;
+    --button-hover-bg: #3a3733;
+    --default-button-bg: #c2412d;
+    --default-button-hover-bg: #a83625;
+    --close-button-bg: #6f6b63;
+    --close-button-hover-bg: #4a4640;
+    --delete-button-bg: #c2412d;
+    --delete-button-hover-bg: #a83625;
+    --object-tools-fg: #ffffff;
+    --object-tools-bg: #1c1b19;
+    --object-tools-hover-bg: #3a3733;
+    --font-family-primary: "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", system-ui, sans-serif;
+    --panel-bg: #ffffff;
+  }
+  html[data-theme="dark"] {
+    --primary: #e2604a;
+    --secondary: #1b1a18;
+    --accent: #e0b458;
+    --primary-fg: #ffffff;
+    --body-fg: #ece8e0;
+    --body-bg: #131211;
+    --body-quiet-color: #a39d93;
+    --body-medium-color: #cfc9bf;
+    --body-loud-color: #ffffff;
+    --header-color: #ece8e0;
+    --header-branding-color: #ffffff;
+    --header-bg: #1b1a18;
+    --header-link-color: #ffffff;
+    --breadcrumbs-fg: #a39d93;
+    --breadcrumbs-link-fg: #ece8e0;
+    --breadcrumbs-bg: #1b1a18;
+    --link-fg: #f08a76;
+    --link-hover-color: #ffb3a3;
+    --link-selected-fg: #f08a76;
+    --hairline-color: #2e2c29;
+    --border-color: #413e3a;
+    --error-fg: #f08a76;
+    --message-success-bg: #1f3a2b;
+    --message-warning-bg: #45391a;
+    --message-error-bg: #4a211b;
+    --darkened-bg: #1b1a18;
+    --selected-bg: #2e2c29;
+    --selected-row: #3a321c;
+    --button-fg: #131211;
+    --button-bg: #ece8e0;
+    --button-hover-bg: #ffffff;
+    --default-button-bg: #e2604a;
+    --default-button-hover-bg: #c94f3b;
+    --close-button-bg: #5a564f;
+    --close-button-hover-bg: #6f6b63;
+    --delete-button-bg: #e2604a;
+    --delete-button-hover-bg: #c94f3b;
+    --object-tools-fg: #131211;
+    --object-tools-bg: #ece8e0;
+    --object-tools-hover-bg: #ffffff;
+    --panel-bg: #22201e;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --primary: #e2604a; --secondary: #1b1a18; --body-fg: #ece8e0; --body-bg: #131211;
+      --body-quiet-color: #a39d93; --body-medium-color: #cfc9bf; --body-loud-color: #ffffff;
+      --header-color: #ece8e0; --header-bg: #1b1a18; --breadcrumbs-fg: #a39d93; --breadcrumbs-link-fg: #ece8e0;
+      --breadcrumbs-bg: #1b1a18; --link-fg: #f08a76; --link-hover-color: #ffb3a3; --link-selected-fg: #f08a76;
+      --hairline-color: #2e2c29; --border-color: #413e3a; --error-fg: #f08a76;
+      --message-success-bg: #1f3a2b; --message-warning-bg: #45391a; --message-error-bg: #4a211b;
+      --darkened-bg: #1b1a18; --selected-bg: #2e2c29; --selected-row: #3a321c;
+      --button-fg: #131211; --button-bg: #ece8e0; --button-hover-bg: #ffffff;
+      --default-button-bg: #e2604a; --default-button-hover-bg: #c94f3b;
+      --close-button-bg: #5a564f; --close-button-hover-bg: #6f6b63;
+      --delete-button-bg: #e2604a; --delete-button-hover-bg: #c94f3b;
+      --object-tools-fg: #131211; --object-tools-bg: #ece8e0; --object-tools-hover-bg: #ffffff;
+      --panel-bg: #22201e;
+    }
+  }
+
+  body { line-height: 1.6; -webkit-font-smoothing: antialiased; }
+  h1, h2, #site-name, .module caption, .module h2 { font-family: "Noto Serif TC", "Songti TC", serif; letter-spacing: 0.03em; }
+
+  /* 頂端列 */
+  #header { padding: 14px 32px; border-bottom: 3px solid var(--primary); }
+  #site-name { font-size: 1.25rem; font-weight: 700; margin: 0; }
+  #site-name a { display: inline-flex; align-items: center; gap: 10px; }
+  #site-name svg { width: 26px; height: 26px; color: var(--primary); }
+  #site-name .quest { color: #f08a76; }
+  #site-name small { font-family: var(--font-family-primary); font-size: 0.72rem; font-weight: 500; letter-spacing: 0.25em; opacity: 0.7; }
+  #user-tools { font-size: 0.8125rem; letter-spacing: 0.02em; text-transform: none; }
+  div.breadcrumbs { padding: 10px 32px; font-size: 0.8125rem; border-bottom: 1px solid var(--hairline-color); }
+
+  /* 內容區塊做成卡片 */
+  #content { padding: 28px 32px; }
+  #content h1 { font-size: 1.6rem; font-weight: 700; margin-bottom: 20px; }
+  .module, .inline-group, #changelist, .login #container {
+    background: var(--panel-bg); border: 1px solid var(--border-color); border-radius: 12px; overflow: hidden;
+    box-shadow: 0 1px 2px rgb(0 0 0 / 0.04), 0 14px 32px -20px rgb(0 0 0 / 0.18);
+  }
+  #changelist { padding: 4px 0; }
+  #changelist .changelist-form-container, #changelist-filter { background: transparent; }
+  .module h2, .module caption, .inline-group h2 {
+    background: var(--darkened-bg); color: var(--body-fg); font-size: 0.95rem; font-weight: 700; padding: 12px 16px;
+    border-bottom: 1px solid var(--hairline-color); text-transform: none;
+  }
+  .module caption a.section:link, .module caption a.section:visited { color: var(--body-fg); }
+  #nav-sidebar .current-app .section:link, #nav-sidebar .current-app .section:visited { color: var(--body-fg); }
+  #content-related .module h2 { background: transparent; }
+  fieldset.module { padding-bottom: 8px; }
+  .form-row { padding: 14px 16px; border-bottom: 1px solid var(--hairline-color); }
+  td, th { padding: 11px 14px; border-bottom: 1px solid var(--hairline-color); }
+  thead th { background: var(--darkened-bg); font-size: 0.8rem; letter-spacing: 0.04em; color: var(--body-quiet-color); }
+  #result_list tbody tr:hover { background: var(--selected-bg); }
+
+  /* 表單與按鈕 */
+  input[type="text"], input[type="password"], input[type="email"], input[type="url"], input[type="number"],
+  input[type="tel"], textarea, select, .vTextField {
+    border: 1px solid var(--border-color); border-radius: 8px; padding: 9px 11px; font-size: 0.9rem; background: var(--panel-bg);
+  }
+  input:focus, textarea:focus, select:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgb(194 65 45 / 0.18); outline: none; }
+  .button, input[type="submit"], input[type="button"], .submit-row input, a.button, .object-tools a, #changelist-filter a.button {
+    border-radius: 8px; padding: 9px 16px; font-weight: 700; letter-spacing: 0.03em; text-transform: none; height: auto;
+  }
+  .object-tools a { padding: 7px 14px; }
+  .submit-row { background: var(--panel-bg); border: 1px solid var(--border-color); border-radius: 12px; padding: 14px 16px; }
+  .submit-row a.deletelink { border-radius: 8px; height: auto; padding: 9px 16px; }
+  #changelist #toolbar { background: transparent; border: 0; padding: 14px 16px; }
+  #changelist .actions { background: transparent; padding: 12px 16px; border: 0; }
+  ul.messagelist li { border-radius: 10px; margin: 0 32px 10px; }
+  #nav-sidebar { border-right: 1px solid var(--hairline-color); }
+  .paginator { padding: 14px 16px; }
+
+  /* 登入頁 */
+  .login { background: var(--body-bg); }
+  .login #container { max-width: 400px; margin: 9vh auto 0; }
+  .login #header { justify-content: center; padding: 22px 24px; }
+  .login #content { padding: 24px; }
+  .login .form-row { padding: 6px 0; border: 0; }
+  .login .form-row input { width: 100%; box-sizing: border-box; }
+  .login .submit-row { border: 0; padding: 14px 0 0; background: transparent; }
+  .login .submit-row input { width: 100%; }
+</style>
+{% endblock %}
+
+{% block branding %}
+<div id="site-name">
+  <a href="{% url 'admin:index' %}">
+    <svg viewBox="0 0 64 64" aria-hidden="true"><path fill="currentColor" d="M12 22h40v6H12zM18 28h6v24h-6zM40 28h6v24h-6zM8 14c8 4 40 4 48 0v6c-8 4-40 4-48 0z"/></svg>
+    <span>Nihongo <span class="quest">Quest</span></span>
+    <small>管理後台</small>
+  </a>
+</div>
+{% if user.is_anonymous %}{% include "admin/color_theme_toggle.html" %}{% endif %}
+{% endblock %}
+
+{% block nav-global %}{% endblock %}

@@ -15,6 +15,10 @@ class Game(models.Model):
     is_active = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
+    class Meta:
+        verbose_name = "遊戲"
+        verbose_name_plural = "遊戲"
+
     def __str__(self):
         return self.title
 
@@ -35,6 +39,8 @@ class GameLevel(models.Model):
     min_seconds = models.PositiveSmallIntegerField("合理的最短通關秒數", default=5)
 
     class Meta:
+        verbose_name = "關卡"
+        verbose_name_plural = "關卡"
         ordering = ["game", "order"]
         constraints = [
             models.UniqueConstraint(fields=["game", "key"], name="level_unique_key_per_game"),
@@ -61,6 +67,8 @@ class Question(models.Model):
     in_game = models.BooleanField("遊戲內題目", default=True)
 
     class Meta:
+        verbose_name = "題目"
+        verbose_name_plural = "題目"
         ordering = ["game", "number"]
         constraints = [
             models.UniqueConstraint(fields=["game", "key"], name="question_unique_key_per_game"),

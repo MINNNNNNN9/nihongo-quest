@@ -26,6 +26,8 @@ class GameSession(models.Model):
     battle_score = models.IntegerField(null=True, blank=True)
 
     class Meta:
+        verbose_name = "遊玩紀錄"
+        verbose_name_plural = "遊玩紀錄"
         indexes = [
             models.Index(fields=["user", "-started_at"], name="session_user_recent_idx"),
             models.Index(fields=["game", "status"], name="session_game_status_idx"),
@@ -60,6 +62,8 @@ class LearningRecord(models.Model):
     is_first_clear = models.BooleanField(default=False)
 
     class Meta:
+        verbose_name = "關卡紀錄"
+        verbose_name_plural = "關卡紀錄"
         ordering = ["-started_at"]
         constraints = [
             models.UniqueConstraint(fields=["session", "level"], name="record_unique_level_per_session"),
@@ -81,6 +85,8 @@ class QuestionAttempt(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
+        verbose_name = "遊戲作答"
+        verbose_name_plural = "遊戲作答"
         indexes = [models.Index(fields=["question", "is_correct"], name="attempt_question_result_idx")]
 
 
@@ -94,4 +100,6 @@ class ReviewAttempt(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
+        verbose_name = "複習作答"
+        verbose_name_plural = "複習作答"
         indexes = [models.Index(fields=["user", "-created_at"], name="review_user_recent_idx")]

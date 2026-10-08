@@ -24,6 +24,8 @@ class ExperienceTransaction(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
+        verbose_name = "經驗值紀錄"
+        verbose_name_plural = "經驗值紀錄"
         ordering = ["-created_at", "-id"]
         indexes = [models.Index(fields=["user", "-created_at"], name="exp_user_recent_idx")]
         constraints = [
@@ -46,4 +48,6 @@ class AchievementUnlock(models.Model):
     unlocked_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
+        verbose_name = "成就解鎖"
+        verbose_name_plural = "成就解鎖"
         constraints = [models.UniqueConstraint(fields=["user", "key"], name="achievement_unique_per_user")]

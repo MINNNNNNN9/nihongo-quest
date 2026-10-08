@@ -24,6 +24,8 @@ class PlayerProfile(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
+        verbose_name = "玩家資料"
+        verbose_name_plural = "玩家資料"
         indexes = [
             models.Index(
                 fields=["-total_exp", "id"],

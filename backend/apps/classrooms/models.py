@@ -20,6 +20,10 @@ class Classroom(models.Model):
     members = models.ManyToManyField(settings.AUTH_USER_MODEL, through="Membership", related_name="classrooms")
     created_at = models.DateTimeField(auto_now_add=True)
 
+    class Meta:
+        verbose_name = "班級"
+        verbose_name_plural = "班級"
+
     def __str__(self):
         return f"{self.name}（{self.code}）"
 
@@ -30,4 +34,6 @@ class Membership(models.Model):
     joined_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
+        verbose_name = "班級成員"
+        verbose_name_plural = "班級成員"
         constraints = [models.UniqueConstraint(fields=["classroom", "user"], name="membership_unique")]
