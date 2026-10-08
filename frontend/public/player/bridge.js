@@ -8,7 +8,7 @@ import { createTracker } from './tracker.js';
 
 const SOURCE = 'nihongo-quest-game';
 const HOST_SOURCE = 'nihongo-quest-host'; // 外層頁面送進來的訊息
-const VOLUME_KEY = 'nq:volume';
+const VOLUME_KEY = 'nq:volume:v2';
 const PROTOCOL_VERSION = 1;
 
 const params = new URLSearchParams(location.search);
@@ -51,7 +51,7 @@ function storedVolume() {
   } catch {
     /* 讀不到就用預設值 */
   }
-  return 0.25; // 預設是滑桿一半的位置
+  return 0.09; // 預設：滑桿 30 的位置（與外層頁面的預設值一致）
 }
 
 function applyVolume(value) {

@@ -7,6 +7,7 @@ import {
   BarChart,
   CartesianGrid,
   Cell,
+  LabelList,
   ResponsiveContainer,
   Tooltip,
   XAxis,
@@ -84,7 +85,7 @@ export function DashboardPage() {
           ) : (
             <div className="h-64">
               <ResponsiveContainer>
-                <BarChart data={topics} layout="vertical" margin={{ left: 8, right: 24 }}>
+                <BarChart data={topics} layout="vertical" margin={{ left: 8, right: 44 }}>
                   <CartesianGrid stroke={colors.grid} strokeDasharray="3 3" horizontal={false} />
                   <XAxis type="number" domain={[0, 100]} unit="%" tick={colors.axis} stroke={colors.grid} />
                   <YAxis type="category" dataKey="label" width={118} tick={colors.axis} stroke={colors.grid} />
@@ -99,6 +100,8 @@ export function DashboardPage() {
                     {topics.map((t) => (
                       <Cell key={t.topic} fill={colors.accuracy(t.accuracy ?? 0)} />
                     ))}
+                    {/* 數字直接標在長條旁邊；正確率 0% 時長條看不到，至少還有數字 */}
+                    <LabelList dataKey="percent" position="right" formatter={(value: number) => `${value}%`} fill={colors.axis.fill} fontSize={12} />
                   </Bar>
                 </BarChart>
               </ResponsiveContainer>
@@ -109,7 +112,11 @@ export function DashboardPage() {
         <section className="panel">
           <h2 className="heading mb-1 text-lg">經驗值成長</h2>
           <p className="mb-3 text-xs text-mist">最近 14 天的累積 EXP。</p>
-          <div className="h-64">
+          {/* 還沒有任何 EXP 時，空的座標軸看起來像壞掉，改成說明文字 */}
+          {data.progress.total_exp === 0 && (
+            <p className="py-10 text-center text-sm text-mist">通過關卡、完成複習或每日任務拿到 EXP 後，這裡會畫出成長曲線。</p>
+          )}
+          <div className={data.progress.total_exp === 0 ? 'hidden' : 'h-64'}>
             <ResponsiveContainer>
               <AreaChart data={history} margin={{ left: -8, right: 12 }}>
                 <defs>

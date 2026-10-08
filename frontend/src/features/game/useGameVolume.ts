@@ -5,8 +5,9 @@ import { GAME_ORIGIN } from './useGameBridge';
 /** 外層頁面 → 播放器（iframe）的訊息。與 public/player/bridge.js 對應。 */
 export const HOST_MESSAGE_SOURCE = 'nihongo-quest-host';
 // 播放器同源時也會直接讀這個值，遊戲一載入就是上次的音量
-const STORAGE_KEY = 'nq:volume';
-const DEFAULT = { level: 50, muted: false };
+const STORAGE_KEY = 'nq:volume:v2';
+// 原遊戲的音效偏大聲，預設放在偏小的位置
+const DEFAULT = { level: 30, muted: false };
 
 interface VolumeSetting {
   /** 滑桿位置 0–100 */

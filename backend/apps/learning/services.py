@@ -9,6 +9,7 @@
 from dataclasses import dataclass
 
 from django.db import IntegrityError, transaction
+from django.db.models import Max
 from django.utils import timezone
 from rest_framework.exceptions import NotFound, ValidationError
 
@@ -144,10 +145,21 @@ def _level_completed(session, level, data) -> EventResult:
     return EventResult(reward=gamification.award_level_clear(session.user, record))
 
 
+def _last_activity(session: GameSession):
+    """這一局最後一次有動靜的時間（開始關卡、作答、過關），沒有任何紀錄時就是開局時間。"""
+    times = [session.started_at]
+    for started_at, completed_at in session.records.values_list("started_at", "completed_at"):
+        times += [started_at, completed_at]
+    times.append(QuestionAttempt.objects.filter(record__session=session).aggregate(last=Max("created_at"))["last"])
+    return max(t for t in times if t)
+
+
 def _finish(session: GameSession, status: str, battle_score: int | None = None) -> None:
     wrong = sum(session.records.values_list("wrong_count", flat=True))
     session.status = status
-    session.ended_at = timezone.now()
+    # 中途離開的局是在「下一次開局」時才被標記的，可能隔了好幾天；
+    # 結束時間要用最後一次有動靜的時間，否則學習時間會把沒在玩的時間也算進去
+    session.ended_at = _last_activity(session) if status == GameSession.Status.ABANDONED else timezone.now()
     session.answer_score = max(0, ANSWER_SCORE_BASE - ANSWER_SCORE_PENALTY * wrong)
     if battle_score is not None:
         session.battle_score = max(0, min(BATTLE_SCORE_MAX, battle_score))

@@ -159,3 +159,15 @@ def test_learning_records_are_private(player, make_user):
     other = APIClient()
     other.force_authenticate(make_user("jiro"))
     assert other.get("/api/learning-records/").json()["data"]["count"] == 0
+
+
+def test_abandoned_session_ends_at_last_activity(client, game):
+    """中途離開的局要到下次開局才會被標記；結束時間應該是最後一次作答，而不是標記的當下。"""
+    first = Player(client, game)
+    first.send("LEVEL_STARTED", "1-1")
+    first.answer("1-1")
+
+    Player(client, game)  # 之後才回來開新的一局
+    session = GameSession.objects.get(pk=first.session_id)
+    assert session.status == GameSession.Status.ABANDONED
+    assert session.ended_at == QuestionAttempt.objects.get(record__session=session).created_at
